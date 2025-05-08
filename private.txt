@@ -1,0 +1,35 @@
+08/05/25 - setup
+#backend
+- con docker aperto, dal cmd aperto nella cartella backend, lanciare  docker build -t anonimadata-backend . per costruire l'immagine docker (si basa su Dockerfile)
+- per lanciare l'immagine eseguire docker run -it -p 8080:8080 anonimadata-backend
+- collegarsi a localhost:8080 per vedere messaggio di ok
+
+#terraform
+- variables.tf contiene le variabili così sono parametrizzate
+- cloudrun.tf contiene il codice per cloudrun su GCP
+- main.tf contiene le info sul provider e su terraform
+
+per eseguire il codice, da dentro la cartella:
+    terraform init
+    terraform plan -var="project_id=IL_TUO_PROJECT_ID"
+    terraform apply -var="project_id=IL_TUO_PROJECT_ID"
+
+Come usare Firebase Authentication in un progetto GCP
+🔹 1. Attiva Firebase sul tuo progetto GCP
+        - Vai su: https://console.firebase.google.com
+        - Clicca su “Aggiungi progetto”
+        - Seleziona il tuo progetto GCP esistente
+        - Attiva Firebase Authentication
+🔹 2. Abilita il provider di accesso (Google, email, ecc.)
+        - Nella Firebase Console: Authentication → Sign-in method
+        - Abilita Google
+        - Inserisci il tuo dominio e URI di reindirizzamento, se richiesto
+        - (Facoltativo: anche email/password, GitHub, ecc.)
+Per runnare il container serve il file .json prodotto da firebase dopo averlo attivato su GCP, quindi:
+    1- Scarica il file .json della service account da Firebase
+    2- Rinominalo in firebase-service-account.json e mettilo nella stessa cartella backend
+    3- Esegui con Docker o deploya su Cloud Run
+
+Riassunto del giorno: scritto codice di terraform e backend compreso di auteticazione tramite firebase. Non ho testato/eseguito NIENTE. Non ho toccato GCP (quindi non ho nemmeno attivato Firebase). Manca tutta la parte frontend (i file sono mockup vuoti)
+
+TODO: eseguire le robe, aggiungere firebase su GCP, scrivere frontend
