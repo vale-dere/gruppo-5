@@ -30,6 +30,8 @@ Per runnare il container serve il file .json prodotto da firebase dopo averlo at
     2- Rinominalo in firebase-service-account.json e mettilo nella stessa cartella backend
     3- Esegui con Docker o deploya su Cloud Run
 
-Riassunto del giorno: scritto codice di terraform e backend compreso di auteticazione tramite firebase. Non ho testato/eseguito NIENTE. Non ho toccato GCP (quindi non ho nemmeno attivato Firebase). Manca tutta la parte frontend (i file sono mockup vuoti)
+Perchè abbiamo scelto Firebase e non Identity Platform? perchè prevediamo solo login con google, fino a una certa soglia Firebase è grautito mentre IP si paga sempre, non ci serve MFA o login aziendali
+
+Riassunto del giorno: scritto codice di terraform e backend compreso di autenticazione tramite firebase. Non ho testato/eseguito NIENTE. Non ho toccato GCP (quindi non ho nemmeno attivato Firebase). Manca tutta la parte frontend (i file sono mockup vuoti)
 
 TODO: eseguire le robe, aggiungere firebase su GCP, scrivere frontend
