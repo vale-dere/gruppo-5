@@ -35,3 +35,24 @@ Perchè abbiamo scelto Firebase e non Identity Platform? perchè prevediamo solo
 Riassunto del giorno: scritto codice di terraform e backend compreso di autenticazione tramite firebase. Non ho testato/eseguito NIENTE. Non ho toccato GCP (quindi non ho nemmeno attivato Firebase). Manca tutta la parte frontend (i file sono mockup vuoti)
 
 TODO: eseguire le robe, aggiungere firebase su GCP, scrivere frontend
+
+08/05/2025 - Setup
+#Frontend
+Setup
+1. Installa Node.js    https://nodejs.org/
+    (Facoltativo) Possibiltà di installare choco, un gestore di pacchetti per Windows, ti permette di installare programmi direttamente da terminale 
+2. Verifica installazione: node -v     e    npm -v   
+3. nstalla Vite CLI: npm install -g create-vite
+4. Crea progetto Vite React: npm create vite@latest frontend -- --template react
+4. Progetto react
+5. Creo nuova cartella "S_R" in locale.Dentro la nuova cartella: cd frontend    npm install   
+6. Avvia server: npm run dev
+7. Apri Chrome e vai su http://localhost:5173/ per vedere l'app React
+       
+Visual studio code
+Apro la cartella "S_R" su VSCode e inizio a modificare il file  frontend/src/App.jsx
+Dentro src/, creo una nuova cartella chiamata components con due file:
+    - UploadForm.jsx → gestisce il caricamento del file
+    - AlgorithmSelector.jsx → mostra la selezione dell’algoritmo 
+    - styles.css -> aggiunge stili al progetto
+
