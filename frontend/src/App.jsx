@@ -1,23 +1,13 @@
-import React, { useState } from 'react';
-import './styles.css';  // Importa il CSS
-import UploadForm from './components/UploadForm';
-import AlgorithmSelector from './components/AlgorithmSelector';
+import { Routes, Route } from 'react-router-dom';
+import LoginPage from './pages/LoginPage';
+import DashboardPage from './pages/DashboardPage';
 
 function App() {
-  const [response, setResponse] = useState(null);
-
   return (
-    <div className="container">
-      <h1>Anonimizzazione Dati - Protezione Privacy</h1>
-      <AlgorithmSelector />
-      <UploadForm onResult={setResponse} />
-      {response && (
-        <div style={{ marginTop: '1rem' }}>
-          <h3>Risultato:</h3>
-          <pre>{JSON.stringify(response, null, 2)}</pre>
-        </div>
-      )}
-    </div>
+    <Routes>
+      <Route path="/" element={<LoginPage />} />
+      <Route path="/dashboard" element={<DashboardPage />} />
+    </Routes>
   );
 }
 
