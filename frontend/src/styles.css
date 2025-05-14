@@ -1,0 +1,133 @@
+/* styles.css */
+
+/* Body e background */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7fb;  /* Sfumatura di blu chiaro */
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Contenitore principale */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Testo titolo */
+  h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #1a73e8;  /* Blu brillante */
+    margin-bottom: 40px;
+  }
+  
+  /* Stili per il form */
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Etichette input */
+  label {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #555;
+  }
+  
+  /* Input, select, e file */
+  input[type="number"],
+  input[type="file"],
+  select {
+    padding: 12px 15px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 400px;
+    background-color: #f1f5f9;
+    transition: border-color 0.3s ease;
+  }
+  
+  input[type="number"]:focus,
+  input[type="file"]:focus,
+  select:focus {
+    border-color: #1a73e8;
+    outline: none;
+    box-shadow: 0 0 5px rgba(26, 115, 232, 0.3);
+  }
+  
+  /* Bottoni */
+  button {
+    background-color: #1a73e8;  /* Blu professionale */
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  button:hover {
+    background-color: #0f5dbf;  /* Blu scuro durante hover */
+  }
+  
+  /* Stile per il risultato (risposta server) */
+  pre {
+    background-color: #e8f0fe;
+    padding: 15px;
+    border-radius: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #333;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  
+  /* Sezione selezione algoritmo */
+  select {
+    background-color: #f1f5f9;
+    font-weight: normal;
+  }
+  
+  /* Box shadow e animazione hover */
+  .container:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Media Query per schermi piccoli */
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 2rem;
+    }
+  
+    .container {
+      padding: 20px;
+    }
+  
+    input[type="number"],
+    input[type="file"],
+    select,
+    button {
+      max-width: 100%;
+    }
+  }
+  
