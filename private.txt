@@ -56,3 +56,9 @@ Dentro src/, creo una nuova cartella chiamata components con due file:
     - AlgorithmSelector.jsx → mostra la selezione dell’algoritmo 
     - styles.css -> aggiunge stili al progetto
 
+PER APRIRE IL SITO WEB
+1. Entrare nella cartella frontend
+2. Aprire terminale git bash
+3. Lanciare il comando     npm run dev
+4. Copiare sul web il link che viene generato 
+5. Chiudendo il terminale si chiude anche il sito web
