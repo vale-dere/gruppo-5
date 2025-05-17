@@ -3,7 +3,7 @@ import '../styles/App.css';  // Usa gli stili globali, o importa un css specific
 
 export default function WhiteBox({ title, children }) {
   return (
-    <div className="upload-box">
+    <div className='white-box'>
       <h2>{title}</h2>
       {children}
     </div>

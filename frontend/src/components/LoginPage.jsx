@@ -1,44 +1,46 @@
 import React, { useState } from 'react';
-import '../styles/ButtonUpload.css';
+import '../styles/Login.css';
+import WhiteBox from './WhiteBox';
+import backgroundImage from '../assets/banner-bg.jpg';
 import { useNavigate } from 'react-router-dom';
 
-export default function Login() {
-  const navigate = useNavigate();
+export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (email === 'user@example.com' && password === 'password') {
-      navigate('/home');
-    } else {
-      alert('Invalid credentials');
-    }
+    console.log('Email:', email, 'Password:', password);
+    navigate('/home'); // Simula login
   };
 
   return (
-    <div className="login-container">
-      <div className="login-box">
-        <h2>Login to AnonimaData</h2>
-        <form onSubmit={handleLogin}>
+    <div className="login-page">
+      <div
+        className="login-background"
+        style={{ backgroundImage: `url(${backgroundImage})` }}
+      />
+      <div className="login-content">
+      <WhiteBox title="Login to AnonimaData" className="login-box">
+        <form className="login-form" onSubmit={handleLogin}>
           <input
-            className="login-input"
             type="email"
             placeholder="Email"
+            className="login-input"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
           />
           <input
-            className="login-input"
             type="password"
             placeholder="Password"
+            className="login-input"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
           />
-          <button className="login-button" type="submit">Login</button>
+          <button type="submit" className="button">Login</button>
         </form>
+      </WhiteBox>
       </div>
     </div>
   );

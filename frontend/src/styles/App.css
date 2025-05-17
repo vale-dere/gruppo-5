@@ -4,12 +4,19 @@
   font-family: sans-serif;
 }
 
-.header-banner {
-  display: flex; 
+.header-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
   width: 100%;
-  height: 60px;
-  background-color: rgb(228, 228, 228);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 8px 30px;
+  background-color: rgba(255, 255, 255, 0.485); /* Trasparente */
+  z-index: 3;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  backdrop-filter: blur(2px); /* Effetto vetro */
 }
 
 .title-section {
@@ -53,7 +60,7 @@
   height: 600px;
 }
 /* Box in cui caricare il file*/
-.upload-box {
+.white-box {
   max-width: 600px;
   margin: 25pt auto;
   padding: 30px;
@@ -65,7 +72,7 @@
 }
 
 /* Box titolo caricamento dataset */
-.upload-box h2 {
+.white-box h2 {
   margin-bottom: 30px;
   margin-top: 5pt;
   color: #333;

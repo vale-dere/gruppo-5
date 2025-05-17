@@ -62,3 +62,61 @@ PER APRIRE IL SITO WEB
 3. Lanciare il comando     npm run dev
 4. Copiare sul web il link che viene generato 
 5. Chiudendo il terminale si chiude anche il sito web
+
+
+17/05/2025 - Frontend
+
+Ho essenzialmente rifatto totalmente il frontend. Situazione attuale:
+
+COMPOSIZIONE PROGETTO
+
+frontend/
+├── node_modules/              # Dipendenze del progetto (generate automaticamente)
+├── public/
+│   └── index.html             # HTML base dell'app React, punto di mount della SPA
+├── src/                       # Cartella principale del codice sorgente
+│
+│   ├── assets/                # Immagini e risorse statiche
+│   │   ├── banner-bg.jpg      # Immagine di sfondo usata nell'homepage e nel login
+│
+│   ├── components/            # Componenti React riutilizzabili
+│   │
+│   │   ├── AlgorithmSelector.jsx     # Dropdown per selezionare l’algoritmo di anonimizzazione
+│   │   ├── FileUpload.jsx            # Componente per caricare un file (dataset)
+│   │   ├── HomePage.jsx              # Pagina principale dopo il login, contiene upload e algoritmi
+│   │   ├── LoginPage.jsx             # Pagina di login con input email/password
+│   │   └── WhiteBox.jsx              # Box stilizzato usato come contenitore
+│
+│   ├── styles/                # File CSS di stile per i componenti
+│   │
+│   │   ├── App.css            # Stili globali dell'app (layout, header, titolo, etc.)
+│   │   ├── ButtonUpload.css   # Stili specifici per il bottone di upload file
+│   │   └── Login.css          # Stili specifici della pagina di login
+│
+│   ├── App.test.js            # File di test per l'app (React Testing Library o Jest)
+│   ├── MainApp.jsx            # Entry point della SPA, include routing tra Login e Home
+│   ├── reportWebVitals.js     # (Opzionale) per monitorare performance dell'app React
+│   ├── setupTests.js          # Configurazione per i test automatici
+│   └── logo.svg               # Logo React di default (probabilmente inutilizzato)
+│
+├── .gitignore                 # File per ignorare cartelle (es. node_modules) in Git
+├── Dockerfile                 # File per creare un'immagine Docker dell'app
+├── eslint.config.js           # Configurazione per linting del codice
+├── index.html                 # File HTML base (doppione nella root: da verificare)
+├── package-lock.json          # Mappa delle dipendenze (versioni esatte)
+├── package.json               # Metadata del progetto e lista dipendenze
+
+
+COSA FA ATTUALMENTE IL FRONTEND
+Il frontend è un'applicazione React con routing di base e componenti modulari. Attualmente include:
+
+1. LoginPage.jsx
+Form di login utente (non ancora collegato a un sistema di autenticazione reale)
+
+2. HomePage.jsx
+Pagina principale dopo il login
+	- Solo esetico: Caricare un dataset
+	- Solo esetico: Scegliere un algoritmo
+	- Bottone Anonymize abilitato solo se file e algoritmo sono selezionati
+
+
