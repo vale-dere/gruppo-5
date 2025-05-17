@@ -1,0 +1,215 @@
+.App {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+.header-banner {
+  display: flex; 
+  width: 100%;
+  height: 60px;
+  background-color: rgb(228, 228, 228);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.title-section {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Immagine sotto il titolo */
+.background-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(70%) blur(0px); /* solo sull'immagine */
+  opacity: 0.9;
+  z-index: 1;
+}
+
+/* Titolo */
+.title-content {
+  position: relative;
+  font-family: 'Groverdale', serif;
+  font-size: 26px;
+  z-index: 2;
+  text-align: center;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+/*Zona sotto il titolo, corpo del sito web*/
+.body-section {
+  background-color: white;
+  height: 600px;
+}
+/* Box in cui caricare il file*/
+.upload-box {
+  max-width: 600px;
+  margin: 25pt auto;
+  padding: 30px;
+  border-radius: 25px;
+  background: #ffffff;
+  box-shadow: 19px 19px 47px #cfcfcf,
+              -19px -19px 47px #ffffff;
+  text-align: center;
+}
+
+/* Box titolo caricamento dataset */
+.upload-box h2 {
+  margin-bottom: 30px;
+  margin-top: 5pt;
+  color: #333;
+}
+
+/* Box nome file*/
+.file-input-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px; /* Spazio tra "no file selected" e bottone upload*/
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.custom-file-upload {
+  background-color: #2e7dff;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.custom-file-upload:hover {
+  background-color: #155edc;
+}
+
+.custom-file-upload input {
+  display: none;
+}
+
+.file-name {
+  font-size: 14px;
+  color: #555;
+  word-break: break-all;
+  flex: 1;
+  text-align: left;
+}
+
+.file-name-box {
+  flex: 1;
+  min-height: 1rem;
+  padding: 12px 16px;
+  background-color: #ffffff;
+  border: 2px dashed #cccccc;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #767676;
+;
+  display: flex;
+  align-items: center;
+  word-break: break-word;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Box in cui selezionare l'algoritmo a discesa */
+.algorithm-box {
+  max-width: 600px;
+  margin: 25pt auto;
+  padding: 30px;
+  border-radius: 25px;
+  background: #ffffff;
+  box-shadow: 19px 19px 47px #cfcfcf,
+              -19px -19px 47px #ffffff;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+/* Box titolo scelta algoritmo */
+.algorithm-box h2 {
+  margin-bottom: 30px;
+  margin-top: 5pt;
+  color: #333;
+}
+
+/* Box a discesa scelta algoritmo */
+.algorithm-select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid #cccccc;
+  font-size: 14px;
+  color: #767676;
+  background-color: #f9f9f9;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+  transition: border-color 0.3s ease;
+  transition: color 0.3s ease;
+}
+
+.algorithm-select:focus {
+  border-color: #488aec;
+  outline: none;
+}
+
+.algorithm-select.selected {
+  color: #000000; /* nero dopo la selezione */
+}
+
+.parameter-section {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.parameter-section label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #444;
+}
+
+.parameter-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 2px solid #ccc;
+  background-color: #fefefe;
+}
+
+.login-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.login-button {
+  width: 100%;
+  background-color: #2e7dff;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.login-button:hover {
+  background-color: #155edc;
+}

@@ -1,34 +1,38 @@
-import { useState } from 'react';
-import Papa from 'papaparse';
+import React from 'react';
 
-export default function FileUpload({ onLoad }) {
-  const [filename, setFilename] = useState('');
-
-  const handleFile = e => {
-    const file = e.target.files[0];
-    if (!file) return;
-    setFilename(file.name);
-
-    const ext = file.name.split('.').pop();
-    const reader = new FileReader();
-
-    reader.onload = e => {
-      if (ext === 'csv') {
-        const result = Papa.parse(e.target.result, { header: true });
-        onLoad(result.data);
-      } else if (ext === 'json') {
-        onLoad(JSON.parse(e.target.result));
-      }
-    };
-
-    reader.readAsText(file);
-  };
-
+export default function FileUpload({ selectedFile, onFileChange }) {
   return (
-    <div className="mb-4">
-      <label className="block mb-1 font-medium">Upload CSV or JSON</label>
-      <input type="file" accept=".csv,.json" onChange={handleFile} />
-      {filename && <p className="mt-2 text-sm text-gray-600">File: {filename}</p>}
+    <div className="file-input-wrapper">
+      {/* Box a sinistra con nome file */}
+      <div className="file-name-box">
+        {selectedFile ? selectedFile.name : "No file selected"}
+      </div>
+
+      {/* Bottone upload */}
+      <input
+        id="fileUpload"
+        type="file"
+        accept=".csv, .json"
+        onChange={onFileChange}
+        style={{ display: 'none' }}
+      />
+
+      <label htmlFor="fileUpload">
+        <button type="button">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            viewBox="0 0 24 24"
+          >
+            <path d="M4 4v16h16V4H4zm8 12v-4M8 12l4-4 4 4" />
+          </svg>
+          Upload dataset
+        </button>
+      </label>
     </div>
   );
 }
