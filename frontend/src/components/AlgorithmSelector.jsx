@@ -1,6 +1,12 @@
 import React from 'react';
 
-export default function AlgorithmSelector({ selectedAlgorithm, onAlgorithmChange }) {
+export default function AlgorithmSelector({ 
+  selectedAlgorithm, 
+  onAlgorithmChange,
+  parameterValue,
+  onParameterChange 
+}) {
+
   return (
     <>
       <select
@@ -25,6 +31,8 @@ export default function AlgorithmSelector({ selectedAlgorithm, onAlgorithmChange
             id="k"
             type="number"
             min="1"
+            value={parameterValue}
+            onChange={onParameterChange}
             placeholder="e.g. 3"
             className="parameter-input"
             />
@@ -39,6 +47,8 @@ export default function AlgorithmSelector({ selectedAlgorithm, onAlgorithmChange
             type="number"
             min="0"
             step="0.01"
+            value={parameterValue}
+            onChange={onParameterChange}
             placeholder="e.g. 0.5"
             className="parameter-input"
             />

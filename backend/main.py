@@ -1,3 +1,5 @@
+''' COMMENTO LE TUE PARTI, POI LE USIAMO DOPO
+
 from fastapi import FastAPI, UploadFile, File, Request, HTTPException, Depends
 import pandas as pd
 import firebase_admin
@@ -46,3 +48,5 @@ async def upload(file: UploadFile = File(...), user_data: dict = Depends(verify_
 async def private_route(user_data: dict = Depends(verify_token)): #to manage middleware and access controls to route
     # This route is only accessible to authenticated users, verify_token must be true 
     return {"message": f"Hello {user_data.get('email')}, you're authenticated!"}
+'''
+
