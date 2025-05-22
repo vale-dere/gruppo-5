@@ -127,9 +127,15 @@ Pagina principale dopo il login
 22/05/25 - collegamento backend e frontend
 - eliminata cartella vecchia di backend
 - adesso il backend e il frontend si parlano correttamente
+- nella cartella utility ho messo un file .csv per testare il funzionamento
 - WORKFLOW per far funzionare tutto: 
     1- aprire docer desktop
     2- da una prima finestra w1 nel backend (w1/backend) lanciare docker run -it -p 8080:8080 anonimadata-backend
     3- (w2/frontend) lanciare npm run dev e aprire browser
 
+TO DO:
+- sistemare estetica bottone "upload dataset" perchè è brutto (anche se funziona)
+- [frontend] gli algoritmi l-diversity e t-closness che non hanno parametro non abilitano tasto anonymize
+- implementare effettivamente i vari metodi di anonimizzazione
+- csv funziona correttamente, c'è da testare con file json
 

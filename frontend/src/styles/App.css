@@ -221,7 +221,7 @@
   background-color: #155edc;
 }
 
-{/*stili messi per far funzionare il bottone di upload dataset visto che ame non funzionava. da sistemare perchè il bottone è brutto*/}
+/*stili messi per far funzionare il bottone di upload dataset visto che non funzionava. da sistemare perchè il bottone è brutto*/
 .upload-button {
   display: flex;
   align-items: center;
