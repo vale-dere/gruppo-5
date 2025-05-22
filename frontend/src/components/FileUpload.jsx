@@ -7,8 +7,9 @@ export default function FileUpload({ selectedFile, onFileChange }) {
       <div className="file-name-box">
         {selectedFile ? selectedFile.name : "No file selected"}
       </div>
-
-      {/* Bottone upload */}
+    
+    {/* per ora commento perchè non mi va il bottone
+      {/* Bottone upload */}{/*
       <input
         id="fileUpload"
         type="file"
@@ -33,6 +34,26 @@ export default function FileUpload({ selectedFile, onFileChange }) {
           Upload dataset
         </button>
       </label>
+      */}
+
+      <label className="upload-button">
+      <input
+        type="file"
+        accept=".csv, .json"
+        onChange={onFileChange}
+        style={{ display: 'none' }}
+      />
+      <span className="custom-button">
+        <svg mlns="http://www.w3.org/2000/svg"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                viewBox="0 0 24 24" />
+        Upload dataset
+      </span>
+    </label>
     </div>
   );
 }

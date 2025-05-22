@@ -1,0 +1,11 @@
+age,zipcode,disease
+29,12345,flu
+34,12345,cancer
+29,67890,cold
+40,67890,flu
+29,12345,cold
+34,12345,cancer
+40,67890,flu
+45,12345,diabetes
+34,12345,cancer
+29,67890,flu

@@ -32,6 +32,7 @@ function HomePage() {
     setParameterValue(e.target.value);
   };
 
+  /* commento momentaneo. capire se meglio questo o codice nuovo (vedi subito dopo)
   // Funzione per chiamare il backend
   const handleAnonymize = async () => {
     if (!selectedFile || !selectedAlgorithm) return;
@@ -42,7 +43,7 @@ function HomePage() {
     const paramName = selectedAlgorithm === 'differential-privacy' ? 'epsilon' : 'k';
     form.append(paramName, parameterValue); 
     try {
-      const res = await fetch('http://localhost:8000/anonymize', {
+      const res = await fetch('http://localhost:8080/anonymize', {
         method: 'POST',
         body: form
       });
@@ -55,7 +56,44 @@ function HomePage() {
       setLoading(false);
     }
   };
+  */
+  const handleAnonymize = async () => {
+    console.log("Sending anonymization request", selectedFile, selectedAlgorithm, parameterValue); //debug purposes
 
+    if (!selectedFile || !selectedAlgorithm || !parameterValue) return;
+    setLoading(true);
+  
+    const form = new FormData();
+    form.append("file", selectedFile);
+    form.append("algorithm", selectedAlgorithm);  // es. "k-anonymity"
+    form.append("parameter", parameterValue);     // es. "2" o "0.5"
+  
+    try {
+      const res = await fetch("http://localhost:8080/anonymize", {
+        method: "POST",
+        body: form,
+      });
+  
+      console.log("Status:", res.status);
+
+      const text = await res.text(); // non usare .json() subito
+      console.log("Raw response:", text);
+
+      if (!res.ok) { //debug purposes
+      const error = JSON.parse(text);
+      alert("Errore backend: " + error.detail);
+      return;
+  }
+
+      const json = JSON.parse(text); // parsing manuale
+      setPreviewData(json.preview || []);
+    } catch (err) {
+      console.error("Errore di rete:", err);
+      alert("Errore durante l’anonimizzazione. Errore di rete: " + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="App">
@@ -107,7 +145,8 @@ function HomePage() {
           <button
             type="button"
             className="anonymize-button"
-            disabled={!selectedFile || !selectedAlgorithm}
+            disabled={!selectedFile || !selectedAlgorithm || !parameterValue}
+            onClick={handleAnonymize}
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="2"
               strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">

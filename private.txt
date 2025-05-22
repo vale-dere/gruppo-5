@@ -119,4 +119,17 @@ Pagina principale dopo il login
 	- Solo esetico: Scegliere un algoritmo
 	- Bottone Anonymize abilitato solo se file e algoritmo sono selezionati
 
+21/05/25 - backend
+- ho creato una nuova cartella di backend per cercare di uniformare il lavoro e dividere bene in moduli 
+- ho modificato la parte di chiamata del backend nel frontend. Non ho eliminato ancora la parte vecchia visto che non sono sicura sia corretta la nuova parte
+- ho dovuto installare npm install react-router-dom, ricordiamocelo per una futura guida di come far partire il progetto da dare al prof
+
+22/05/25 - collegamento backend e frontend
+- eliminata cartella vecchia di backend
+- adesso il backend e il frontend si parlano correttamente
+- WORKFLOW per far funzionare tutto: 
+    1- aprire docer desktop
+    2- da una prima finestra w1 nel backend (w1/backend) lanciare docker run -it -p 8080:8080 anonimadata-backend
+    3- (w2/frontend) lanciare npm run dev e aprire browser
+
 
