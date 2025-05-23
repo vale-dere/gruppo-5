@@ -144,11 +144,16 @@ TO DO:
 
 23/05/25 - docker frontend
 - implementato con successo docker per il frontend
+- testato anche con file .json e funziona correttamente, inoltre non permette di selezionare altri tipi di file come da traccia
+- anche il file di test .json è presente nella cartella utility
 - prima di avviare il container la prima volta bisogna costruirlo con  docker build -t anonimadata-frontend . (nella cartella del frontend)
 - WORKFLOW per far funzionare tutto: 
     1- aprire docker desktop
     2- da una prima finestra w1 nel backend (w1/backend) lanciare docker run -it -p 8080:8080 anonimadata-backend
     3- (w2/frontend) lanciare docker run -p 8081:80 anonimadata-frontend e aprire browser con indirizzo localhost:8081
 
+TO DO:
+- [frontend] gli algoritmi l-diversity e t-closeness che non hanno parametro non abilitano tasto anonymize
+- implementare effettivamente i vari metodi di anonimizzazione
 
 

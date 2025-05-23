@@ -1,0 +1,12 @@
+[
+  {"age": 29, "zipcode": 12345, "disease": "flu"},
+  {"age": 34, "zipcode": 12345, "disease": "cancer"},
+  {"age": 29, "zipcode": 67890, "disease": "cold"},
+  {"age": 40, "zipcode": 67890, "disease": "flu"},
+  {"age": 29, "zipcode": 12345, "disease": "cold"},
+  {"age": 34, "zipcode": 12345, "disease": "cancer"},
+  {"age": 40, "zipcode": 67890, "disease": "flu"},
+  {"age": 45, "zipcode": 12345, "disease": "diabetes"},
+  {"age": 34, "zipcode": 12345, "disease": "cancer"},
+  {"age": 29, "zipcode": 67890, "disease": "flu"}
+]
