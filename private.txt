@@ -129,7 +129,7 @@ Pagina principale dopo il login
 - adesso il backend e il frontend si parlano correttamente
 - nella cartella utility ho messo un file .csv per testare il funzionamento
 - WORKFLOW per far funzionare tutto: 
-    1- aprire dokcer desktop
+    1- aprire docker desktop
     2- da una prima finestra w1 nel backend (w1/backend) lanciare docker run -it -p 8080:8080 anonimadata-backend
     3- (w2/frontend) lanciare npm run dev e aprire browser
 
@@ -139,3 +139,7 @@ TO DO:
 - implementare effettivamente i vari metodi di anonimizzazione
 - csv funziona correttamente, c'è da testare con file json
 
+
+23/05/2025 - frontend
+
+08:50 Bottone upload dataset sistemato
