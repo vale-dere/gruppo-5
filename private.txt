@@ -139,6 +139,9 @@ TO DO:
 - implementare effettivamente i vari metodi di anonimizzazione
 - csv funziona correttamente, c'è da testare con file json
 
+23/05/2025 - frontend
+- Bottone upload dataset sistemato
+
 23/05/25 - docker frontend
 - implementato con successo docker per il frontend
 - prima di avviare il container la prima volta bisogna costruirlo con  docker build -t anonimadata-frontend . (nella cartella del frontend)
@@ -148,6 +151,4 @@ TO DO:
     3- (w2/frontend) lanciare docker run -p 8081:80 anonimadata-frontend e aprire browser con indirizzo localhost:8081
 
 
-23/05/2025 - frontend
 
-08:50 Bottone upload dataset sistemato
