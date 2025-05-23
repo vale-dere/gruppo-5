@@ -128,6 +128,10 @@ Pagina principale dopo il login
 - eliminata cartella vecchia di backend
 - adesso il backend e il frontend si parlano correttamente
 - nella cartella utility ho messo un file .csv per testare il funzionamento
+- WORKFLOW per far funzionare tutto: 
+    1- aprire dokcer desktop
+    2- da una prima finestra w1 nel backend (w1/backend) lanciare docker run -it -p 8080:8080 anonimadata-backend
+    3- (w2/frontend) lanciare npm run dev e aprire browser
 
 TO DO:
 - sistemare estetica bottone "upload dataset" perchè è brutto (anche se funziona)
@@ -143,3 +147,7 @@ TO DO:
     2- da una prima finestra w1 nel backend (w1/backend) lanciare docker run -it -p 8080:8080 anonimadata-backend
     3- (w2/frontend) lanciare docker run -p 8081:80 anonimadata-frontend e aprire browser con indirizzo localhost:8081
 
+
+23/05/2025 - frontend
+
+08:50 Bottone upload dataset sistemato
