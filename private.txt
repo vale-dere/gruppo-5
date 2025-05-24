@@ -156,4 +156,6 @@ TO DO:
 - [frontend] gli algoritmi l-diversity e t-closeness che non hanno parametro non abilitano tasto anonymize
 - implementare effettivamente i vari metodi di anonimizzazione
 
+24/05/25 - k_anon
+- scritto algoritmo di k_anon, ma lo devo aggiustare visto che non fa bene il suo lavoro
 
