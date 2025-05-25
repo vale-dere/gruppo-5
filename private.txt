@@ -157,3 +157,7 @@ TO DO:
 - implementare effettivamente i vari metodi di anonimizzazione
 
 
+25/05/2025  differential privacy
+
+DA FARE PRIMA DI TUTTO
+- Rebuildare backend -> Ho aggiunto la libreria diffprivlib

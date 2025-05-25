@@ -157,36 +157,38 @@ function HomePage() {
         </div>
       
         {/* Preview dei dati anonimizzati */}
-        {previewData.length > 0 && (
-          <div className="preview-table" style={{ maxWidth: '800px', margin: '40px auto' }}>
-            <h3>Preview Anonymized Data</h3>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr>
-                  {Object.keys(previewData[0]).map(col => (
-                    <th key={col} style={{ border: '1px solid #ccc', padding: '8px', textAlign: 'left' }}>
-                    {col}
-                   </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {previewData.map((row, idx) => (
-                  <tr key={idx}>
-                    {Object.values(row).map((val, i) => (
-                      <td key={i} style={{ border: '1px solid #eee', padding: '8px' }}>
-                        {val}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        <WhiteBox title="Preview Anonymized Data">
+  {previewData.length > 0 ? (
+    <div style={{ overflowX: 'auto', backgroundColor: 'white', padding: '10px', borderRadius: '6px' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <thead>
+          <tr>
+            {Object.keys(previewData[0]).map(col => (
+              <th key={col} style={{ border: '1px solid #ccc', padding: '8px', backgroundColor: '#f5f5f5' }}>{col}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {previewData.map((row, idx) => (
+            <tr key={idx}>
+              {Object.values(row).map((val, i) => (
+                <td key={i} style={{ border: '1px solid #eee', padding: '8px' }}>{val}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  ) : (
+    <p style={{ textAlign: 'center', marginTop: '20px' }}>
+      Upload and anonymize a file to see the preview.
+    </p>
+  )}
+</WhiteBox>
+ 
       </section>
     </div>
-  );
+);
 }
 
 export default HomePage;

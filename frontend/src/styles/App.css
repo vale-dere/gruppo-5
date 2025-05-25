@@ -61,6 +61,7 @@
 }
 /* Box in cui caricare il file*/
 .white-box {
+  position: relative;
   max-width: 600px;
   margin: 25pt auto;
   padding: 30px;
@@ -69,6 +70,28 @@
   box-shadow: 19px 19px 47px #cfcfcf,
               -19px -19px 47px #ffffff;
   text-align: center;
+  overflow-x: auto;
+  min-height: 100px
+}
+
+.white-box table {
+  width: 100%;                  
+  table-layout: auto;           
+}
+
+.white-box th, .white-box td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  white-space: nowrap;         
+}
+
+.white-box::-webkit-scrollbar {
+  height: 8px;                  
+}
+
+.white-box::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
 }
 
 /* Box titolo caricamento dataset */
@@ -77,6 +100,7 @@
   margin-top: 5pt;
   color: #333;
 }
+
 
 /* Box nome file*/
 .file-input-wrapper {

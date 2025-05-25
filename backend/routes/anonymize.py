@@ -1,6 +1,5 @@
 #what the server does when someone sends a POST to the /anonymize path
-from fastapi import UploadFile, File, Form, HTTPException
-from fastapi import APIRouter
+from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 import pandas as pd
 from io import BytesIO
 from algorithms.anonymization import (
