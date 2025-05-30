@@ -51,6 +51,24 @@ async def anonymize(
     "household_size", "family_size", "num_children",
     "nationality", "language", "income", "salary", "financial_status",]
     quasi_ids = [col for col in df.columns if col.lower() in quasi_ids_list] # c'è un modo per farlo più dinamico e generico?
+    #quasi_ids = [col.lower() for col in df.columns if col.lower() in quasi_ids_list] se voglio che la listadi quasi_ids sia minuscola
+
+    sensitive_data_list = ["disease", "diagnosis", "medical_condition", "health_status", "disability", "condition",
+    "mental_health", "physical_health", "treatment", "medication", "therapy",
+    "surgery", "genetic_data", "genome", "hereditary_condition",
+    "biometric_data", "fingerprint", "retina_scan", "face_recognition", "voice_pattern",
+    "sexual_orientation", "sexual_preference", "sex_life",
+    "religion", "religious_belief", "faith", "creed",
+    "political_opinion", "political_affiliation", "party_membership",
+    "philosophical_belief", "moral_belief", "ideology",
+    "union_membership", "labor_union", "trade_union",
+    "criminal_record", "criminal_history", "offense", "conviction",
+    "ethnicity", "racial_origin", "skin_color", "tribal_affiliation",
+    "HIV_status", "STD_status", "cancer_type", "chronic_disease",
+    "pregnancy_status", "fertility", "reproductive_health",
+    "insurance_number", "social_security_number", "tax_id",
+    "citizenship_status", "immigration_status", "asylum_status"]
+    sensitive_attr = [col for col in df.columns if col.lower() in sensitive_data_list]
 
     # 4. Parsing e validazione parametro
     try:
@@ -66,7 +84,7 @@ async def anonymize(
         if algorithm == "k-anonymity":
             result = apply_k_anonymity(df, quasi_ids, param)
         elif algorithm == "l-diversity":
-            result = apply_l_diversity(df, quasi_ids, "disease", param)
+            result = apply_l_diversity(df, quasi_ids, sensitive_attr, param)
         elif algorithm == "t-closeness":
             result = apply_t_closeness(df, quasi_ids, "disease", param)
         elif algorithm == "differential-privacy":

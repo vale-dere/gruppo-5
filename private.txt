@@ -163,3 +163,7 @@ TO DO:
 
 DA FARE PRIMA DI TUTTO
 - Rebuildare backend -> Ho aggiunto la libreria diffprivlib
+
+30/05/25 - l_div
+- scritto algoritmo di l_div, ma va testato meglio e migliorato
+- ho aggiunto anche la comparsa del parametro nel frontend che non c'era per l_div

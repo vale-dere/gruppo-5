@@ -54,6 +54,21 @@ export default function AlgorithmSelector({
             />
         </div>
         )}
+
+        {selectedAlgorithm === "l-diversity" && (
+        <div className="parameter-section">
+            <label htmlFor="l">l (diversity level):</label>
+            <input
+            id="l"
+            type="number"
+            min="1"
+            value={parameterValue}
+            onChange={onParameterChange}
+            placeholder="e.g. 3"
+            className="parameter-input"
+            />
+        </div>
+        )}
     </>
   );
 }
