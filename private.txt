@@ -160,6 +160,8 @@ TO DO:
 - scritto algoritmo di k_anon, ma lo devo aggiustare visto che non fa bene il suo lavoro
 
 25/05/2025  differential privacy
+- scritto algoritmo differential privacy ma andrebbe controllato bene
+- sistemato preview dati frontend
 
 DA FARE PRIMA DI TUTTO
 - Rebuildare backend -> Ho aggiunto la libreria diffprivlib
@@ -167,3 +169,24 @@ DA FARE PRIMA DI TUTTO
 30/05/25 - l_div
 - scritto algoritmo di l_div, ma va testato meglio e migliorato
 - ho aggiunto anche la comparsa del parametro nel frontend che non c'era per l_div
+
+31/05/25
+
+1. Ho notato che non faceva gli aggiornamenti in tempo reale nel frontend salvando il file su vs code, quindi ho fatto delle modifiche:
+
+- ./frontend/Dockerfile 	modificato	// build produzione
+- ./backend/Dockerfile 		modificato	
+- ./frontend/vite.config.js 	modificato	
+- ./frontend/Dockerfile.dev	creato 		// per orchestrare frontend e backend
+- gruppo-5/docker-compose.yml	creato		// dev server con hot reload, permette modifica realtime
+
+Adesso per far buildare i server non serve fare il doppio passaggio di prima, perché vengono buildati e runnati ogni volta in automatico. Devi :
+
+- Aprire una bash in gruppo-5, quindi nella root della cartella e lanciare docker-compose up --build
+
+Fine. Fammi sapere se non ti va bene
+
+
+2. Ho modificato anche lo scroll verticale, bloccandolo ed evitando che scorra all'infinito (modifiche ad App.css)
+
+3. Ho scritto l'algoritmo di t-closeness ma non funziona, da rivedere

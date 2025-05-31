@@ -16,9 +16,9 @@ async def anonymize():
 
 @router.post("/anonymize")
 async def anonymize(
-    file: UploadFile = File(...),
-    algorithm: str = Form(...),
-    parameter: str = Form(...)
+    file: UploadFile = File(None),
+    algorithm: str = Form(None),
+    parameter: float = Form(None)
 ):
     print("File:", file.filename) # Debugging
     print("Tipo file ricevuto:", file.content_type) # Debugging
@@ -72,12 +72,17 @@ async def anonymize(
 
     # 4. Parsing e validazione parametro
     try:
-        if algorithm == "differential-privacy":
+        print(f"Parametro ricevuto: '{parameter}'")  # Debugging
+        if not parameter.strip():
+            raise ValueError("Parametro vuoto o solo spazi")
+        parameter = parameter.strip().replace(',', '.')
+        if algorithm in ["differential-privacy", "t-closeness"]:
             param = float(parameter)
         else:
             param = int(parameter)
-    except ValueError:
-        raise HTTPException(status_code=400, detail="Parametro non valido. Deve essere un numero.")
+    except ValueError as e:
+        print(f"Errore conversione parametro: {e}")  # Debug
+        raise HTTPException(status_code=400, detail="Parametro non valido. Deve essere un numero valido. (Ricevuto: '{parameter}')")
 
     # 5. Applica l’algoritmo
     try:
@@ -86,7 +91,7 @@ async def anonymize(
         elif algorithm == "l-diversity":
             result = apply_l_diversity(df, quasi_ids, sensitive_attr, param)
         elif algorithm == "t-closeness":
-            result = apply_t_closeness(df, quasi_ids, "disease", param)
+            result = apply_t_closeness(df, sensitive_cols=quasi_ids, t=param, group_col="disease")
         elif algorithm == "differential-privacy":
             result = apply_differential_privacy(df, param)
         else:

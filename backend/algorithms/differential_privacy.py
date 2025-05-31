@@ -2,6 +2,16 @@ import pandas as pd # Gestione data frame
 import numpy as np  # Per il rumore casuale
 from datetime import datetime # Per la gestione delle date
 
+# Classe per Laplace
+class Laplace:
+    def __init__(self, epsilon, sensitivity=1):
+        self.epsilon = epsilon
+        self.sensitivity = sensitivity
+
+    def randomise(self, value):
+        scale = self.sensitivity / (self.epsilon + 1e-10)
+        noise = np.random.laplace(0, scale)
+        return value + noise
 
 def apply_differential_privacy(df: pd.DataFrame, epsilon: float) -> pd.DataFrame:
     df_copy = df.copy() # Copio il data frame per non modificare l'originale
