@@ -16,9 +16,9 @@ async def anonymize():
 
 @router.post("/anonymize")
 async def anonymize(
-    file: UploadFile = File(None),
-    algorithm: str = Form(None),
-    parameter: float = Form(None)
+    file: UploadFile = File(...),
+    algorithm: str = Form(...),
+    parameter: str = Form(...)
 ):
     print("File:", file.filename) # Debugging
     print("Tipo file ricevuto:", file.content_type) # Debugging
@@ -73,25 +73,22 @@ async def anonymize(
     # 4. Parsing e validazione parametro
     try:
         print(f"Parametro ricevuto: '{parameter}'")  # Debugging
-        if not parameter.strip():
-            raise ValueError("Parametro vuoto o solo spazi")
-        parameter = parameter.strip().replace(',', '.')
         if algorithm in ["differential-privacy", "t-closeness"]:
             param = float(parameter)
         else:
             param = int(parameter)
-    except ValueError as e:
-        print(f"Errore conversione parametro: {e}")  # Debug
-        raise HTTPException(status_code=400, detail="Parametro non valido. Deve essere un numero valido. (Ricevuto: '{parameter}')")
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Parametro non valido. Deve essere un numero.")
 
     # 5. Applica l’algoritmo
+    result = None
     try:
         if algorithm == "k-anonymity":
             result = apply_k_anonymity(df, quasi_ids, param)
         elif algorithm == "l-diversity":
             result = apply_l_diversity(df, quasi_ids, sensitive_attr, param)
         elif algorithm == "t-closeness":
-            result = apply_t_closeness(df, sensitive_cols=quasi_ids, t=param, group_col="disease")
+            result = apply_t_closeness(df, quasi_ids, sensitive_attr, param)        
         elif algorithm == "differential-privacy":
             result = apply_differential_privacy(df, param)
         else:
@@ -100,7 +97,7 @@ async def anonymize(
         raise HTTPException(status_code=500, detail=f"Errore durante l'applicazione dell'algoritmo: {str(e)}")
 
     # 6. Restituisce la preview
-    preview = result.head().to_dict(orient="records")
+    preview = result.to_dict(orient="records")
     return {"preview": preview}
 
 #codice generato ma non controllato per ottenere lista di quasi-identifiers, magari ptrebbe tornarci utile
