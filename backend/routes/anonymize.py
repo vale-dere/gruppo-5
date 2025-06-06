@@ -135,18 +135,20 @@ async def anonymize(
         print("Nessun quasi-identificatore trovato nel dataset.")
         raise HTTPException(status_code=400, detail="Nessun quasi-identificatore trovato nel dataset.")
 
-    if not sensitive_attr and algorithm == "l-diversity": #magari aggiungere anche t-closeness
-        print("Nessun attributo sensibile trovato. Attivo fallback per l-diversity.")
+    if not sensitive_attr and (algorithm == "l-diversity" or algorithm == "t_closeness") :
+        print("Nessun attributo sensibile trovato. Attivo fallback")
         sensitive_attr = fallback_sensitive_attr(df, quasi_ids)
         if not sensitive_attr:
             raise HTTPException(
                 status_code=400,
-                detail="Nessun attributo sensibile rilevato nel dataset, neanche con fallback. Impossibile procedere con l-diversity."
+                detail="Nessun attributo sensibile rilevato nel dataset, neanche con fallback. Impossibile procedere."
             )
 
+    #debug
     print("Identificatori diretti:", identifiers)
     print("Attributi sensibili:", sensitive_attr)
     print("Quasi-identificatori:", quasi_ids)
+    
     #rimozione identifdicatori diretti
     if identifiers:
         print("Rimozione colonne identificatrici:", identifiers)
