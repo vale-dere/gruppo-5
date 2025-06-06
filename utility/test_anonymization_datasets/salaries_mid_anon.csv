@@ -1,0 +1,7 @@
+Age,Gender,ZipCode,Salary,Department
+27,*,111**,50k,HR
+27,*,111**,60k,HR
+27,*,111**,70k,HR
+50,*,222**,100k,Finance
+50,*,222**,110k,Finance
+50,*,222**,120k,Finance

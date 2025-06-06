@@ -1,0 +1,501 @@
+Age,Gender,Zipcode,Disease
+32,Female,45339,Depression
+53,Female,46826,Diabetes
+32,Female,89252,Cancer
+57,Female,35328,Depression
+30,Female,32382,Heart Disease
+53,Female,37889,Heart Disease
+63,Male,42644,Cancer
+66,Male,92734,Cancer
+37,Male,23813,Cancer
+37,Female,14964,Diabetes
+56,Male,85822,Depression
+61,Female,91512,Cancer
+20,Male,84529,Depression
+44,Male,50555,Cancer
+55,Female,90015,Heart Disease
+43,Male,64878,Cancer
+42,Female,92734,Depression
+47,Female,59783,Cancer
+59,Male,40195,Depression
+21,Male,86493,Diabetes
+63,Female,72553,Depression
+39,Female,98844,Diabetes
+61,Female,83157,Flu
+36,Female,14661,Depression
+24,Female,18574,Diabetes
+55,Male,56072,Cancer
+29,Male,92734,Diabetes
+33,Female,14964,Depression
+39,Female,98316,Flu
+45,Male,45339,Diabetes
+22,Female,22047,Heart Disease
+47,Male,22906,Heart Disease
+25,Male,89252,Heart Disease
+42,Male,38254,Heart Disease
+69,Female,40993,Heart Disease
+67,Female,31362,Cancer
+40,Female,20912,Depression
+46,Female,28840,Heart Disease
+46,Female,32382,Heart Disease
+42,Female,46392,Cancer
+44,Female,37636,Diabetes
+35,Female,28840,Flu
+69,Female,26011,Cancer
+54,Female,98013,Flu
+41,Female,23672,Flu
+34,Female,17013,Depression
+66,Female,76284,Depression
+24,Male,21422,Flu
+20,Male,71290,Flu
+61,Male,22047,Cancer
+49,Male,64878,Flu
+67,Male,30557,Depression
+27,Female,30517,Depression
+51,Female,83157,Diabetes
+50,Female,52208,Diabetes
+32,Male,70040,Cancer
+59,Female,36577,Depression
+36,Female,18821,Diabetes
+22,Male,85822,Diabetes
+46,Male,32058,Flu
+59,Male,61159,Diabetes
+51,Female,87940,Depression
+62,Male,31647,Heart Disease
+59,Male,62502,Depression
+49,Female,46044,Flu
+29,Female,84396,Flu
+51,Male,67713,Heart Disease
+20,Male,85421,Cancer
+20,Male,99775,Flu
+68,Male,23813,Diabetes
+48,Female,67412,Flu
+58,Female,50245,Cancer
+67,Male,59783,Depression
+28,Male,76284,Depression
+61,Male,14937,Flu
+51,Male,12523,Flu
+48,Female,87873,Heart Disease
+54,Female,32159,Flu
+64,Female,99893,Heart Disease
+28,Female,85319,Diabetes
+53,Female,78016,Flu
+20,Female,45339,Heart Disease
+65,Male,42849,Cancer
+24,Female,48784,Cancer
+68,Female,28062,Cancer
+57,Female,32197,Flu
+49,Male,61420,Diabetes
+35,Female,38370,Flu
+22,Male,28840,Depression
+69,Male,96031,Flu
+23,Female,14813,Cancer
+25,Female,67412,Diabetes
+41,Male,37636,Flu
+39,Male,93948,Heart Disease
+50,Female,40410,Flu
+30,Male,58402,Heart Disease
+62,Female,56207,Heart Disease
+60,Female,26693,Heart Disease
+29,Male,94618,Heart Disease
+27,Male,32058,Depression
+23,Male,23672,Cancer
+69,Male,56072,Heart Disease
+22,Female,26693,Diabetes
+37,Male,50977,Flu
+58,Female,32021,Flu
+63,Male,30557,Flu
+20,Female,21110,Depression
+69,Female,94618,Cancer
+59,Female,69505,Diabetes
+25,Male,58402,Flu
+68,Female,20912,Diabetes
+32,Male,81946,Heart Disease
+53,Female,99851,Cancer
+60,Female,23672,Cancer
+40,Male,42960,Diabetes
+30,Female,89789,Diabetes
+41,Female,49938,Depression
+61,Female,98844,Depression
+28,Male,16443,Depression
+32,Female,82177,Cancer
+68,Female,98844,Cancer
+60,Male,28298,Diabetes
+38,Female,19928,Diabetes
+59,Male,90343,Heart Disease
+26,Male,37636,Flu
+28,Male,18890,Depression
+35,Male,82030,Depression
+29,Female,25430,Diabetes
+44,Male,29124,Heart Disease
+25,Male,82799,Depression
+29,Male,83157,Cancer
+24,Male,50245,Flu
+37,Male,16443,Heart Disease
+32,Male,29230,Heart Disease
+54,Male,21110,Cancer
+41,Female,52038,Heart Disease
+54,Male,67639,Depression
+35,Female,93772,Cancer
+37,Male,18700,Depression
+51,Male,85421,Diabetes
+57,Female,98844,Diabetes
+49,Female,34224,Depression
+33,Male,35328,Depression
+41,Male,59783,Depression
+46,Male,40410,Depression
+43,Female,40993,Cancer
+42,Female,48847,Flu
+54,Female,22906,Depression
+48,Female,77079,Cancer
+56,Female,14661,Diabetes
+24,Male,32197,Flu
+22,Male,21422,Diabetes
+30,Male,14937,Depression
+23,Male,38237,Diabetes
+40,Female,79437,Cancer
+35,Female,85209,Heart Disease
+39,Male,43766,Heart Disease
+50,Female,50752,Diabetes
+68,Female,82799,Heart Disease
+43,Male,78016,Diabetes
+21,Female,56112,Flu
+45,Female,84361,Cancer
+41,Female,35764,Flu
+37,Male,77079,Cancer
+58,Female,25430,Depression
+21,Female,67713,Diabetes
+38,Male,31515,Depression
+32,Male,90368,Depression
+44,Male,28298,Diabetes
+68,Female,13600,Flu
+34,Male,21422,Depression
+33,Male,85356,Flu
+62,Female,35764,Cancer
+24,Male,23166,Heart Disease
+26,Female,25942,Flu
+39,Male,89252,Diabetes
+26,Male,35968,Flu
+32,Male,29124,Cancer
+69,Male,72553,Diabetes
+28,Male,16784,Cancer
+27,Female,34224,Heart Disease
+20,Male,95110,Diabetes
+32,Male,81946,Cancer
+46,Female,86313,Flu
+57,Female,29230,Flu
+63,Male,98013,Heart Disease
+33,Female,71290,Diabetes
+45,Male,50752,Heart Disease
+41,Male,37889,Flu
+66,Male,16784,Depression
+46,Male,74115,Depression
+44,Female,48847,Flu
+42,Male,79437,Heart Disease
+24,Male,25109,Diabetes
+34,Male,67412,Depression
+21,Male,30613,Depression
+59,Female,38439,Depression
+33,Male,38254,Diabetes
+64,Female,82488,Depression
+30,Male,49938,Diabetes
+35,Female,98316,Depression
+20,Male,33478,Heart Disease
+55,Male,31647,Depression
+69,Female,67713,Cancer
+49,Male,52038,Depression
+33,Male,91512,Diabetes
+20,Female,19928,Diabetes
+24,Male,22047,Diabetes
+38,Female,98499,Cancer
+67,Male,38589,Flu
+35,Female,64878,Diabetes
+20,Female,18890,Flu
+66,Male,74115,Flu
+39,Male,50654,Cancer
+60,Male,89789,Flu
+64,Female,90368,Flu
+35,Female,69505,Flu
+67,Male,56112,Diabetes
+48,Male,75615,Cancer
+67,Male,50977,Cancer
+65,Female,85822,Heart Disease
+21,Male,35968,Diabetes
+29,Male,22906,Flu
+51,Female,16740,Diabetes
+48,Male,59742,Depression
+67,Male,85209,Depression
+47,Female,94618,Depression
+46,Male,16784,Flu
+22,Female,42888,Cancer
+62,Female,59783,Diabetes
+39,Female,16443,Diabetes
+35,Female,79437,Diabetes
+33,Male,23813,Heart Disease
+34,Female,77079,Depression
+49,Male,32159,Cancer
+62,Female,30557,Diabetes
+57,Male,21110,Cancer
+34,Male,48847,Heart Disease
+32,Female,93948,Cancer
+50,Female,59783,Cancer
+62,Female,71290,Cancer
+66,Female,76284,Depression
+62,Female,36577,Diabetes
+58,Male,67639,Heart Disease
+42,Female,14813,Heart Disease
+69,Male,69505,Flu
+43,Male,42849,Diabetes
+35,Male,85669,Flu
+24,Female,25888,Diabetes
+37,Male,60303,Diabetes
+57,Female,29124,Depression
+38,Female,50932,Diabetes
+20,Female,50245,Heart Disease
+35,Female,85209,Flu
+63,Female,75615,Flu
+22,Female,58402,Heart Disease
+66,Female,96136,Heart Disease
+28,Female,40195,Cancer
+53,Male,56207,Diabetes
+57,Female,89252,Diabetes
+57,Male,82030,Heart Disease
+33,Female,82030,Diabetes
+28,Female,38589,Diabetes
+63,Female,78016,Depression
+63,Female,38589,Cancer
+64,Female,56072,Diabetes
+23,Female,58402,Flu
+64,Male,74115,Depression
+23,Female,45800,Cancer
+43,Female,14661,Heart Disease
+27,Female,99893,Flu
+48,Female,82177,Depression
+50,Male,75615,Diabetes
+67,Female,93948,Depression
+42,Male,46826,Heart Disease
+54,Male,79655,Cancer
+33,Male,38410,Flu
+44,Female,44981,Diabetes
+69,Male,38439,Heart Disease
+34,Male,86690,Heart Disease
+23,Male,29951,Depression
+35,Male,90015,Cancer
+29,Male,52038,Flu
+52,Female,25430,Heart Disease
+43,Male,83157,Heart Disease
+40,Male,18574,Cancer
+63,Female,38439,Cancer
+25,Male,76284,Heart Disease
+39,Male,31362,Depression
+30,Female,18574,Depression
+24,Female,99851,Cancer
+52,Male,11697,Cancer
+52,Male,23813,Depression
+41,Male,38254,Heart Disease
+40,Male,42888,Cancer
+30,Female,22047,Flu
+54,Female,29331,Cancer
+48,Female,61159,Heart Disease
+57,Female,25888,Flu
+26,Male,40195,Diabetes
+22,Female,82030,Diabetes
+33,Male,32197,Depression
+54,Female,90015,Diabetes
+55,Male,18574,Heart Disease
+69,Female,16740,Depression
+59,Female,59515,Flu
+23,Male,35968,Flu
+25,Male,60303,Diabetes
+66,Female,37636,Heart Disease
+44,Male,37889,Cancer
+47,Female,50245,Diabetes
+51,Male,18821,Depression
+65,Female,16784,Heart Disease
+30,Male,99893,Flu
+32,Male,16784,Cancer
+64,Male,99893,Diabetes
+68,Female,85421,Heart Disease
+53,Female,14661,Heart Disease
+39,Male,18169,Cancer
+36,Male,38439,Heart Disease
+28,Female,37636,Diabetes
+63,Male,36577,Cancer
+24,Male,40993,Flu
+59,Male,56112,Heart Disease
+51,Male,83157,Heart Disease
+36,Male,85421,Diabetes
+31,Male,22047,Diabetes
+39,Female,48847,Depression
+57,Female,67402,Diabetes
+44,Male,92734,Heart Disease
+44,Female,92734,Depression
+69,Male,82030,Depression
+66,Male,29331,Diabetes
+68,Female,43766,Heart Disease
+36,Male,89252,Depression
+30,Male,37636,Flu
+45,Male,83157,Depression
+24,Female,64878,Flu
+20,Female,25888,Flu
+38,Female,79727,Heart Disease
+26,Male,87873,Heart Disease
+35,Female,59056,Diabetes
+20,Female,34224,Diabetes
+55,Male,19928,Cancer
+52,Female,71290,Diabetes
+25,Female,16443,Diabetes
+33,Male,23672,Heart Disease
+26,Female,61159,Cancer
+33,Male,85669,Heart Disease
+50,Female,67713,Flu
+29,Male,99893,Flu
+27,Female,29230,Cancer
+69,Male,14661,Cancer
+48,Male,55796,Depression
+39,Male,21110,Flu
+59,Female,19685,Heart Disease
+38,Female,11697,Heart Disease
+28,Male,35328,Flu
+39,Female,20198,Flu
+55,Female,14937,Depression
+21,Male,55109,Flu
+39,Female,79727,Flu
+38,Female,18169,Flu
+28,Male,18700,Heart Disease
+62,Female,74115,Depression
+67,Male,50555,Depression
+29,Male,98027,Flu
+49,Female,59783,Depression
+34,Female,50932,Flu
+30,Male,89252,Heart Disease
+25,Female,26693,Diabetes
+33,Male,76086,Heart Disease
+33,Male,96136,Heart Disease
+56,Female,45800,Cancer
+67,Female,98316,Flu
+53,Female,85209,Cancer
+59,Female,21110,Cancer
+41,Male,25430,Flu
+42,Male,28840,Diabetes
+51,Male,70040,Diabetes
+24,Female,65854,Flu
+50,Male,76086,Diabetes
+27,Female,76086,Cancer
+33,Female,90343,Diabetes
+29,Female,10277,Diabetes
+31,Male,62502,Diabetes
+57,Male,37889,Heart Disease
+32,Female,18821,Heart Disease
+47,Male,60303,Heart Disease
+57,Female,49938,Heart Disease
+36,Male,62502,Depression
+56,Male,57092,Depression
+49,Male,57092,Heart Disease
+29,Male,74115,Depression
+52,Female,59488,Flu
+64,Male,77079,Heart Disease
+54,Male,85822,Depression
+37,Female,50555,Heart Disease
+48,Male,19928,Flu
+34,Male,55109,Heart Disease
+37,Female,42849,Heart Disease
+26,Male,99155,Diabetes
+39,Female,79929,Depression
+30,Male,67639,Diabetes
+23,Female,83957,Cancer
+53,Female,85356,Heart Disease
+43,Female,37889,Cancer
+67,Male,31362,Diabetes
+22,Female,62502,Cancer
+62,Female,21422,Flu
+33,Female,59515,Depression
+33,Male,75451,Depression
+58,Male,25430,Heart Disease
+45,Female,37034,Depression
+38,Female,34925,Diabetes
+25,Female,87940,Diabetes
+69,Male,89789,Flu
+31,Female,23166,Diabetes
+45,Female,95110,Depression
+57,Female,38370,Cancer
+59,Female,37889,Cancer
+60,Female,91512,Heart Disease
+23,Male,99155,Depression
+54,Male,67402,Depression
+55,Male,35968,Cancer
+41,Male,18890,Flu
+49,Male,50932,Flu
+23,Male,98499,Cancer
+35,Female,25109,Depression
+39,Female,89789,Heart Disease
+31,Female,36577,Diabetes
+21,Male,79437,Heart Disease
+49,Female,18169,Flu
+48,Female,38589,Diabetes
+52,Female,50752,Depression
+51,Male,14937,Depression
+27,Male,52038,Depression
+20,Male,33478,Depression
+27,Female,29124,Depression
+60,Female,81946,Cancer
+45,Male,61159,Flu
+35,Female,26693,Depression
+41,Female,85822,Diabetes
+44,Male,32159,Heart Disease
+49,Male,59742,Diabetes
+33,Female,19685,Diabetes
+26,Female,38237,Cancer
+46,Female,28062,Diabetes
+60,Female,79655,Cancer
+34,Female,32197,Flu
+28,Male,32382,Depression
+44,Female,28840,Flu
+62,Female,76284,Cancer
+43,Male,50245,Heart Disease
+65,Female,52208,Cancer
+63,Female,37636,Depression
+36,Male,98420,Diabetes
+24,Male,72553,Heart Disease
+36,Female,26183,Cancer
+20,Male,76284,Cancer
+44,Female,75451,Depression
+29,Female,45800,Heart Disease
+61,Female,31647,Heart Disease
+21,Female,98499,Cancer
+53,Male,89789,Diabetes
+66,Female,89789,Depression
+27,Female,50245,Depression
+30,Female,76284,Heart Disease
+38,Male,59783,Cancer
+36,Female,38410,Cancer
+62,Male,38410,Heart Disease
+49,Female,28298,Heart Disease
+41,Male,38254,Heart Disease
+37,Female,55796,Depression
+59,Female,36577,Diabetes
+21,Female,50752,Heart Disease
+49,Female,14813,Diabetes
+30,Male,93948,Depression
+66,Female,46826,Flu
+50,Female,46826,Heart Disease
+65,Female,78016,Heart Disease
+42,Male,59488,Heart Disease
+51,Male,90368,Flu
+69,Female,10277,Heart Disease
+35,Female,76284,Heart Disease
+50,Male,29176,Cancer
+39,Female,82030,Cancer
+38,Female,34925,Cancer
+39,Female,71290,Cancer
+20,Female,85822,Depression
+49,Male,90343,Depression
+43,Female,49042,Heart Disease
+30,Female,32382,Cancer
+45,Male,23813,Flu
+31,Male,18574,Heart Disease
+52,Male,52208,Flu
+50,Male,59488,Heart Disease
+28,Male,38410,Flu
+35,Male,79929,Heart Disease
+65,Male,83957,Diabetes

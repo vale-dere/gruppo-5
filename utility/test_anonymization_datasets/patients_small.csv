@@ -1,0 +1,11 @@
+Name,Age,Gender,ZipCode,Disease
+Alice,29,F,12345,Flu
+Bob,31,M,12345,Cold
+Carol,30,F,12345,Cancer
+Dave,32,M,12345,Flu
+Eve,29,F,12345,Cold
+Frank,40,M,67890,Cancer
+Grace,42,F,67890,Flu
+Heidi,39,F,67890,Cold
+Ivan,41,M,67890,Cancer
+Judy,38,F,67890,Cold

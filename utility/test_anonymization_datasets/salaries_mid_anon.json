@@ -1,0 +1,44 @@
+[
+  {
+    "Age": 27,
+    "Gender": "*",
+    "ZipCode": "111**",
+    "Salary": "50k",
+    "Department": "HR"
+  },
+  {
+    "Age": 27,
+    "Gender": "*",
+    "ZipCode": "111**",
+    "Salary": "60k",
+    "Department": "HR"
+  },
+  {
+    "Age": 27,
+    "Gender": "*",
+    "ZipCode": "111**",
+    "Salary": "70k",
+    "Department": "HR"
+  },
+  {
+    "Age": 50,
+    "Gender": "*",
+    "ZipCode": "222**",
+    "Salary": "100k",
+    "Department": "Finance"
+  },
+  {
+    "Age": 50,
+    "Gender": "*",
+    "ZipCode": "222**",
+    "Salary": "110k",
+    "Department": "Finance"
+  },
+  {
+    "Age": 50,
+    "Gender": "*",
+    "ZipCode": "222**",
+    "Salary": "120k",
+    "Department": "Finance"
+  }
+]

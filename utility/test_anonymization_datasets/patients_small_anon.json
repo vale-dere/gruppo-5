@@ -1,0 +1,62 @@
+[
+  {
+    "Age": "29\u201332",
+    "Gender": "*",
+    "ZipCode": "123**",
+    "Disease": "Flu"
+  },
+  {
+    "Age": "29\u201332",
+    "Gender": "*",
+    "ZipCode": "123**",
+    "Disease": "Cold"
+  },
+  {
+    "Age": "29\u201332",
+    "Gender": "*",
+    "ZipCode": "123**",
+    "Disease": "Cancer"
+  },
+  {
+    "Age": "29\u201332",
+    "Gender": "*",
+    "ZipCode": "123**",
+    "Disease": "Flu"
+  },
+  {
+    "Age": "29\u201332",
+    "Gender": "*",
+    "ZipCode": "123**",
+    "Disease": "Cold"
+  },
+  {
+    "Age": "38\u201342",
+    "Gender": "*",
+    "ZipCode": "678**",
+    "Disease": "Cancer"
+  },
+  {
+    "Age": "38\u201342",
+    "Gender": "*",
+    "ZipCode": "678**",
+    "Disease": "Flu"
+  },
+  {
+    "Age": "38\u201342",
+    "Gender": "*",
+    "ZipCode": "678**",
+    "Disease": "Cold"
+  },
+  {
+    "Age": "38\u201342",
+    "Gender": "*",
+    "ZipCode": "678**",
+    "Disease": "Cancer"
+  },
+  {
+    "Age": "38\u201342",
+    "Gender": "*",
+    "ZipCode": "678**",
+    "Disease": "Cold"
+  }
+]

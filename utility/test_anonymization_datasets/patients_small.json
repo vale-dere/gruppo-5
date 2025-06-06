@@ -1,0 +1,72 @@
+[
+  {
+    "Name": "Alice",
+    "Age": 29,
+    "Gender": "F",
+    "ZipCode": "12345",
+    "Disease": "Flu"
+  },
+  {
+    "Name": "Bob",
+    "Age": 31,
+    "Gender": "M",
+    "ZipCode": "12345",
+    "Disease": "Cold"
+  },
+  {
+    "Name": "Carol",
+    "Age": 30,
+    "Gender": "F",
+    "ZipCode": "12345",
+    "Disease": "Cancer"
+  },
+  {
+    "Name": "Dave",
+    "Age": 32,
+    "Gender": "M",
+    "ZipCode": "12345",
+    "Disease": "Flu"
+  },
+  {
+    "Name": "Eve",
+    "Age": 29,
+    "Gender": "F",
+    "ZipCode": "12345",
+    "Disease": "Cold"
+  },
+  {
+    "Name": "Frank",
+    "Age": 40,
+    "Gender": "M",
+    "ZipCode": "67890",
+    "Disease": "Cancer"
+  },
+  {
+    "Name": "Grace",
+    "Age": 42,
+    "Gender": "F",
+    "ZipCode": "67890",
+    "Disease": "Flu"
+  },
+  {
+    "Name": "Heidi",
+    "Age": 39,
+    "Gender": "F",
+    "ZipCode": "67890",
+    "Disease": "Cold"
+  },
+  {
+    "Name": "Ivan",
+    "Age": 41,
+    "Gender": "M",
+    "ZipCode": "67890",
+    "Disease": "Cancer"
+  },
+  {
+    "Name": "Judy",
+    "Age": 38,
+    "Gender": "F",
+    "ZipCode": "67890",
+    "Disease": "Cold"
+  }
+]

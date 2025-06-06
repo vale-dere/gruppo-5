@@ -1,0 +1,101 @@
+ID,Age,Gender,City,Condition,Hospital
+1,88,F,Torino,Flu,Humanitas
+2,30,F,Napoli,Hypertension,Careggi
+3,41,M,Torino,Diabetes,Gemelli
+4,86,M,Milano,COVID-19,Careggi
+5,47,M,Milano,COVID-19,Niguarda
+6,63,F,Milano,Diabetes,Gemelli
+7,26,M,Roma,Flu,Niguarda
+8,52,M,Napoli,COVID-19,Careggi
+9,50,F,Roma,COVID-19,Niguarda
+10,71,M,Milano,Asthma,San Raffaele
+11,74,F,Roma,Asthma,San Raffaele
+12,85,F,Napoli,Flu,Gemelli
+13,44,M,Roma,Asthma,Gemelli
+14,43,F,Milano,Diabetes,Careggi
+15,84,F,Roma,COVID-19,Careggi
+16,58,F,Milano,COVID-19,Humanitas
+17,46,M,Napoli,Flu,Humanitas
+18,80,M,Torino,COVID-19,Gemelli
+19,79,M,Torino,Hypertension,Humanitas
+20,80,F,Milano,Hypertension,Careggi
+21,89,M,Firenze,COVID-19,San Raffaele
+22,43,F,Torino,Hypertension,Gemelli
+23,71,F,Napoli,Flu,Careggi
+24,72,M,Torino,Asthma,Careggi
+25,65,F,Firenze,COVID-19,San Raffaele
+26,55,F,Napoli,COVID-19,Careggi
+27,51,F,Napoli,COVID-19,San Raffaele
+28,49,F,Roma,Diabetes,Careggi
+29,23,F,Torino,Flu,Niguarda
+30,55,M,Napoli,Hypertension,San Raffaele
+31,72,M,Torino,Asthma,Careggi
+32,57,M,Milano,COVID-19,San Raffaele
+33,50,F,Napoli,Hypertension,Humanitas
+34,87,M,Roma,Flu,Careggi
+35,19,M,Firenze,COVID-19,Gemelli
+36,64,F,Milano,Flu,Niguarda
+37,27,M,Roma,Flu,Humanitas
+38,38,M,Roma,Flu,Niguarda
+39,80,F,Torino,Diabetes,Niguarda
+40,89,F,Torino,Asthma,Gemelli
+41,44,F,Napoli,Diabetes,Humanitas
+42,59,M,Roma,Diabetes,Niguarda
+43,73,M,Firenze,Diabetes,San Raffaele
+44,90,F,Milano,Asthma,Gemelli
+45,81,M,Torino,Diabetes,San Raffaele
+46,62,M,Milano,Diabetes,Careggi
+47,56,F,Napoli,Hypertension,San Raffaele
+48,48,M,Torino,Flu,Gemelli
+49,80,M,Napoli,COVID-19,Gemelli
+50,25,M,Firenze,Asthma,Gemelli
+51,50,M,Napoli,COVID-19,Niguarda
+52,83,M,Torino,COVID-19,Careggi
+53,50,M,Torino,COVID-19,Careggi
+54,78,M,Milano,Flu,Gemelli
+55,66,F,Milano,Asthma,Careggi
+56,88,M,Milano,Flu,Niguarda
+57,88,F,Firenze,Asthma,Careggi
+58,72,M,Napoli,Asthma,Humanitas
+59,85,F,Torino,Flu,Gemelli
+60,34,M,Napoli,Asthma,Niguarda
+61,41,M,Torino,Hypertension,Gemelli
+62,50,F,Milano,Asthma,Humanitas
+63,87,M,Roma,COVID-19,Humanitas
+64,31,M,Roma,Diabetes,Careggi
+65,33,M,Napoli,COVID-19,Careggi
+66,79,M,Napoli,COVID-19,Gemelli
+67,65,F,Torino,COVID-19,Careggi
+68,22,M,Torino,COVID-19,Humanitas
+69,54,F,Roma,Diabetes,Niguarda
+70,87,M,Milano,Asthma,San Raffaele
+71,74,M,Napoli,Flu,Niguarda
+72,70,F,Milano,COVID-19,Niguarda
+73,70,M,Milano,Asthma,Niguarda
+74,80,M,Roma,Asthma,San Raffaele
+75,67,M,Roma,Diabetes,Humanitas
+76,80,F,Torino,COVID-19,San Raffaele
+77,24,F,Firenze,Hypertension,Humanitas
+78,77,M,Roma,Hypertension,Humanitas
+79,36,F,Torino,Flu,Humanitas
+80,37,M,Napoli,Asthma,Humanitas
+81,46,M,Firenze,Diabetes,Humanitas
+82,39,F,Milano,Flu,Gemelli
+83,22,F,Napoli,Asthma,Careggi
+84,19,M,Napoli,Asthma,Humanitas
+85,50,F,Firenze,Hypertension,San Raffaele
+86,78,F,Napoli,Flu,Careggi
+87,69,M,Firenze,Hypertension,San Raffaele
+88,50,M,Firenze,COVID-19,Niguarda
+89,21,M,Torino,Flu,Careggi
+90,42,M,Torino,COVID-19,Humanitas
+91,26,F,Napoli,Hypertension,Careggi
+92,40,M,Napoli,Flu,Humanitas
+93,38,M,Roma,Hypertension,Humanitas
+94,28,M,Napoli,Diabetes,Gemelli
+95,85,F,Torino,Flu,Humanitas
+96,33,F,Torino,Asthma,Careggi
+97,18,M,Milano,COVID-19,Humanitas
+98,31,M,Napoli,Flu,Humanitas
+99,59,M,Napoli,Asthma,San Raffaele
+100,48,M,Roma,Asthma,Humanitas
