@@ -2,13 +2,102 @@
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 import pandas as pd
 from io import BytesIO
+import numpy as np
+import json
 
 from algorithms.k_anonymity import apply_k_anonymity
 from algorithms.l_diversity import apply_l_diversity
 from algorithms.t_closeness import apply_t_closeness
 from algorithms.differential_privacy import apply_differential_privacy
+from config.keywords import IDENTIFIER_KEYWORDS, SENSITIVE_KEYWORDS, QUASI_IDENTIFIER_KEYWORDS
 
 router = APIRouter()
+def sanitize_for_json(df):
+    # Sostituisci inf con NaN
+    df = df.replace([np.inf, -np.inf], np.nan)
+    # Sostituisci NaN con None
+    df = df.where(pd.notnull(df), None)
+    # Converti tipi float in oggetti per evitare problemi di serializzazione JSON
+    for col in df.columns:
+        if pd.api.types.is_float_dtype(df[col]):
+            df[col] = df[col].astype(object)
+    return df
+''' PER ORA LO LASCIO QUI IL CODICE, POI CAPIAMO SE IMPLEMENTARLO O MENO
+def fallback_quasi_identifiers(df: pd.DataFrame, top_n: int = 2) -> list[str]:
+    # Colonne non identifier e non sensitive, con più di una modalità e non tutte uniche
+    candidate_cols = [col for col in df.columns 
+                      if df[col].nunique() > 1 and df[col].nunique() < len(df) and not pd.api.types.is_float_dtype(df[col])]
+    # Se non ci sono candidate, torna vuoto
+    if not candidate_cols:
+        return []
+
+    # Ordina per entropia decrescente (simile a fallback_sensitive_attr)
+    entropies = {}
+    for col in candidate_cols:
+        counts = df[col].value_counts(normalize=True)
+        entropy = -np.sum(counts * np.log2(counts + 1e-9))
+        entropies[col] = entropy
+
+    sorted_cols = sorted(entropies.items(), key=lambda x: x[1], reverse=True)
+    selected = [col for col, _ in sorted_cols[:top_n]]
+    return selected
+'''
+def fallback_sensitive_attr(df: pd.DataFrame, quasi_identifiers: list[str], top_n: int = 1) -> list[str]:
+    """Se non si trova un attributo sensibile, sceglie come fallback il QI più variegato."""
+    if not quasi_identifiers:
+        return []
+
+    # Calcola l'entropia di ciascun quasi-identificatore
+    entropies = {}
+    for col in quasi_identifiers:
+        # Frequenza relativa delle modalità
+        counts = df[col].value_counts(normalize=True)
+        entropy = -np.sum(counts * np.log2(counts + 1e-9))  # log2 con epsilon per evitare log(0)
+        entropies[col] = entropy
+
+    # Ordina per entropia decrescente e prendi i top_n
+    sorted_attrs = sorted(entropies.items(), key=lambda x: x[1], reverse=True)
+    selected = [col for col, _ in sorted_attrs[:top_n]]
+
+    print(f"[Fallback] Attributo sensibile selezionato automaticamente: {selected}")
+    return selected
+
+
+def classify_columns(df: pd.DataFrame):
+    identifiers = []
+    sensitive = []
+    quasi_identifiers = []
+
+    for col in df.columns:
+        col_lower = col.lower().strip()
+
+        # Identificatori diretti
+        if any(k in col_lower for k in IDENTIFIER_KEYWORDS):
+            identifiers.append(col)
+            continue
+
+        # Attributi sensibili
+        if any(k in col_lower for k in SENSITIVE_KEYWORDS):
+            sensitive.append(col)
+            continue
+
+        # QI per keyword
+        if any(k in col_lower for k in QUASI_IDENTIFIER_KEYWORDS):
+            quasi_identifiers.append(col)
+            continue
+
+        # QI per struttura numerica (es. anni, età)
+        if pd.api.types.is_numeric_dtype(df[col]):
+            values = df[col].dropna()
+            if not values.empty:
+                if 0 <= values.min() <= 120 and values.max() <= 120:
+                    quasi_identifiers.append(col)
+                    continue
+                if 1900 <= values.min() <= 2100 and values.max() <= 2100:
+                    quasi_identifiers.append(col)
+                    continue
+
+    return identifiers, quasi_identifiers, sensitive
 
 @router.get("/anonymize")
 async def anonymize():
@@ -37,38 +126,34 @@ async def anonymize(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Errore nella lettura del file: {str(e)}")
 
-    # 3. Determina le quasi-identifiers
-    quasi_ids_list = [
-    "age", "birthdate", "year_of_birth", "date_of_birth",
-    "zipcode", "postal_code", "zip", "postcode",
-    "city", "town", "municipality",
-    "state", "province", "region", "gender", "sex",
-    "race", "ethnicity","marital_status", "maritalstatus",
-    "occupation", "job_title", "profession",
-    "education", "education_level", "degree",
-    "phone_number", "telephone", "email_domain", "email",
-    "address", "street", "street_address","country",
-    "household_size", "family_size", "num_children",
-    "nationality", "language", "income", "salary", "financial_status",]
-    quasi_ids = [col for col in df.columns if col.lower() in quasi_ids_list] # c'è un modo per farlo più dinamico e generico?
-    #quasi_ids = [col.lower() for col in df.columns if col.lower() in quasi_ids_list] se voglio che la listadi quasi_ids sia minuscola
+    print("initial dataset:", df ) # Debugging
+   
+    # 3. Determina quasi-identifiers e sensitive attributes dinamicamente
+    identifiers, quasi_ids, sensitive_attr = classify_columns(df)
+  
+    if not quasi_ids: #da valutare se aggiungere anche qui fallback
+        print("Nessun quasi-identificatore trovato nel dataset.")
+        raise HTTPException(status_code=400, detail="Nessun quasi-identificatore trovato nel dataset.")
 
-    sensitive_data_list = ["disease", "diagnosis", "medical_condition", "health_status", "disability", "condition",
-    "mental_health", "physical_health", "treatment", "medication", "therapy",
-    "surgery", "genetic_data", "genome", "hereditary_condition",
-    "biometric_data", "fingerprint", "retina_scan", "face_recognition", "voice_pattern",
-    "sexual_orientation", "sexual_preference", "sex_life",
-    "religion", "religious_belief", "faith", "creed",
-    "political_opinion", "political_affiliation", "party_membership",
-    "philosophical_belief", "moral_belief", "ideology",
-    "union_membership", "labor_union", "trade_union",
-    "criminal_record", "criminal_history", "offense", "conviction",
-    "ethnicity", "racial_origin", "skin_color", "tribal_affiliation",
-    "HIV_status", "STD_status", "cancer_type", "chronic_disease",
-    "pregnancy_status", "fertility", "reproductive_health",
-    "insurance_number", "social_security_number", "tax_id",
-    "citizenship_status", "immigration_status", "asylum_status"]
-    sensitive_attr = [col for col in df.columns if col.lower() in sensitive_data_list]
+    if not sensitive_attr and algorithm == "l-diversity": #magari aggiungere anche t-closeness
+        print("Nessun attributo sensibile trovato. Attivo fallback per l-diversity.")
+        sensitive_attr = fallback_sensitive_attr(df, quasi_ids)
+        if not sensitive_attr:
+            raise HTTPException(
+                status_code=400,
+                detail="Nessun attributo sensibile rilevato nel dataset, neanche con fallback. Impossibile procedere con l-diversity."
+            )
+
+    print("Identificatori diretti:", identifiers)
+    print("Attributi sensibili:", sensitive_attr)
+    print("Quasi-identificatori:", quasi_ids)
+    #rimozione identifdicatori diretti
+    if identifiers:
+        print("Rimozione colonne identificatrici:", identifiers)
+        df.drop(columns=identifiers, inplace=True, errors='ignore')
+    
+    #Log finale delle colonne che restano nel dataset
+    print("Colonne rimanenti dopo pulizia:", list(df.columns))
 
     # 4. Parsing e validazione parametro
     try:
@@ -95,62 +180,13 @@ async def anonymize(
         raise HTTPException(status_code=500, detail=f"Errore durante l'applicazione dell'algoritmo: {str(e)}")
 
     # 6. Restituisce la preview
-    preview = result.head().to_dict(orient="records")
+    print("Dataset dopo l'applicazione dell'algoritmo:", result) # Debugging
+    result_clean = sanitize_for_json(result) #good practice to clean data before sending it back
+    try:
+        json.dumps(result_clean.head().to_dict(orient="records"))
+        print("OK, il JSON si serializza")
+    except Exception as e:
+        print("Errore nella serializzazione JSON:", e)
+    preview = result_clean.head().to_dict(orient="records")
     return {"preview": preview}
 
-#codice generato ma non controllato per ottenere lista di quasi-identifiers, magari ptrebbe tornarci utile
-'''
-def guess_quasi_identifiers(df: pd.DataFrame) -> list:
-    # Lista estesa e comune di parole chiave quasi-identificatori
-    quasi_ids_keywords = {
-        "age", "birthdate", "year_of_birth", "date_of_birth",
-        "zipcode", "postal_code", "zip", "postcode",
-        "city", "town", "municipality",
-        "state", "province", "region",
-        "gender", "sex",
-        "race", "ethnicity",
-        "marital_status", "maritalstatus",
-        "occupation", "job_title", "profession",
-        "education", "education_level", "degree",
-        "phone_number", "telephone", "mobile",
-        "email_domain", "email",
-        "address", "street", "street_address",
-        "country",
-        "household_size", "family_size", "num_children",
-        "nationality",
-        "language",
-        "birth_year", "birth_month", "birth_day",
-    }
-    
-    quasi_identifiers = []
-    
-    for col in df.columns:
-        col_lower = col.lower()
-        
-        # Se il nome della colonna contiene una keyword nella lista
-        if any(keyword in col_lower for keyword in quasi_ids_keywords):
-            quasi_identifiers.append(col)
-            continue
-        
-        # Controllo del tipo di dato e valori per riconoscere quasi-identificatori comuni
-        # Esempio: se numerico e valori plausibili per età
-        if pd.api.types.is_numeric_dtype(df[col]):
-            values = df[col].dropna()
-            if not values.empty:
-                min_val, max_val = values.min(), values.max()
-                # Età plausibile da 0 a 120 anni
-                if 0 <= min_val <= 120 and 0 <= max_val <= 120:
-                    quasi_identifiers.append(col)
-                    continue
-        
-        # Codice postale spesso è stringa numerica corta
-        if pd.api.types.is_string_dtype(df[col]):
-            values = df[col].dropna().astype(str)
-            # Se almeno il 90% delle stringhe sono numeri e lunghezza tra 4 e 7 -> probabile CAP
-            num_count = sum(v.isdigit() and 4 <= len(v) <= 7 for v in values)
-            if len(values) > 0 and (num_count / len(values)) >= 0.9:
-                quasi_identifiers.append(col)
-                continue
-        
-    return quasi_identifiers
-    '''
