@@ -69,6 +69,23 @@ export default function AlgorithmSelector({
             />
         </div>
         )}
+
+        {selectedAlgorithm === "t-closeness" && (
+        <div className="parameter-section">
+          <label htmlFor="t">t (closeness threshold):</label>
+          <input
+            id="t"
+            type="number"
+            min="0"
+            step="0.01"
+            value={parameterValue}
+            onChange={onParameterChange}
+            placeholder="e.g. 0.2"
+            className="parameter-input"
+          />
+          
+        </div>
+      )}
     </>
   );
 }

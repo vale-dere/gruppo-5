@@ -157,7 +157,8 @@ async def anonymize(
 
     # 4. Parsing e validazione parametro
     try:
-        if algorithm == "differential-privacy":
+        print(f"Parametro ricevuto: '{parameter}'")  # Debugging
+        if algorithm in ["differential-privacy", "t-closeness"]:
             param = float(parameter)
         else:
             param = int(parameter)
@@ -165,13 +166,14 @@ async def anonymize(
         raise HTTPException(status_code=400, detail="Parametro non valido. Deve essere un numero.")
 
     # 5. Applica l’algoritmo
+    result = None
     try:
         if algorithm == "k-anonymity":
             result = apply_k_anonymity(df, quasi_ids, param)
         elif algorithm == "l-diversity":
             result = apply_l_diversity(df, quasi_ids, sensitive_attr, param)
         elif algorithm == "t-closeness":
-            result = apply_t_closeness(df, quasi_ids, "disease", param)
+            result = apply_t_closeness(df, quasi_ids, sensitive_attr, param)        
         elif algorithm == "differential-privacy":
             result = apply_differential_privacy(df, param)
         else:

@@ -9,7 +9,7 @@ import AlgorithmSelector from './AlgorithmSelector';
 import { useNavigate } from 'react-router-dom';
 
 function HomePage() {
-  console.log("HomePage rendered");
+  //console.log("HomePage rendered");
   
   const navigate = useNavigate();  
   const [selectedFile, setSelectedFile] = useState(null);
@@ -60,13 +60,21 @@ function HomePage() {
   const handleAnonymize = async () => {
     console.log("Sending anonymization request", selectedFile, selectedAlgorithm, parameterValue); //debug purposes
 
-    if (!selectedFile || !selectedAlgorithm || !parameterValue) return;
-    setLoading(true);
+    if (!selectedFile || !selectedAlgorithm || !parameterValue.trim()) {
+      alert("Compila tutti i campi e assicurati che il parametro sia valido");
+      return;
+    }
+
+    const cleanParameter = String(parameterValue).replace(',', '.');
+    if (isNaN(cleanParameter)) {
+      alert("Il parametro deve essere un numero valido (es. 0.1 o 3)");
+      return;
+    }
   
     const form = new FormData();
     form.append("file", selectedFile);
     form.append("algorithm", selectedAlgorithm);  // es. "k-anonymity"
-    form.append("parameter", parameterValue);     // es. "2" o "0.5"
+    form.append("parameter", cleanParameter);     // es. "2" o "0.5"
   
     try {
       const res = await fetch("http://localhost:8080/anonymize", {
@@ -97,7 +105,6 @@ function HomePage() {
 
   return (
     <div className="App">
-      {/* Sezione con sfondo immagine */}
       <section className="title-section">
         {/* Banner bianco con logout*/}
       <header className="header-overlay">
@@ -109,15 +116,6 @@ function HomePage() {
           Logout
         </button> 
       </header>
-      
-        <div
-          className="background-overlay"
-          style={{
-            backgroundImage: `url(${backgroundImage})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        />
         <div className="title-content">
           <h1>AnonimaData</h1>
           <p>Upload and anonymize your datasets</p>
@@ -157,35 +155,36 @@ function HomePage() {
         </div>
       
         {/* Preview dei dati anonimizzati */}
-        <WhiteBox title="Preview Anonymized Data">
-  {previewData.length > 0 ? (
-    <div style={{ overflowX: 'auto', backgroundColor: 'white', padding: '10px', borderRadius: '6px' }}>
-      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-        <thead>
-          <tr>
-            {Object.keys(previewData[0]).map(col => (
-              <th key={col} style={{ border: '1px solid #ccc', padding: '8px', backgroundColor: '#f5f5f5' }}>{col}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {previewData.map((row, idx) => (
-            <tr key={idx}>
-              {Object.values(row).map((val, i) => (
-                <td key={i} style={{ border: '1px solid #eee', padding: '8px' }}>{val}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  ) : (
-    <p style={{ textAlign: 'center', marginTop: '20px' }}>
-      Upload and anonymize a file to see the preview.
-    </p>
-  )}
-</WhiteBox>
- 
+        <WhiteBox title="Preview Anonymized Data" >
+          {previewData.length > 0 ? (
+            <div style={{ overflowX: 'auto', backgroundColor: 'white', padding: '10px', borderRadius: '6pxì'}}>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr>
+                    {Object.keys(previewData[0]).map(col => (
+                      <th key={col} style={{ border: '1px solid #ccc', padding: '8px', backgroundColor: '#f5f5f5' }}>{col}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {previewData.map((row, idx) => (
+                    <tr key={idx}>
+                      {Object.values(row).map((val, i) => (
+                        <td key={i} style={{ border: '1px solid #eee', padding: '8px' }}>{val}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p style={{ textAlign: 'center', marginTop: '20px' }}>
+              Upload and anonymize a file to see the preview.
+            </p>
+          )}
+  
+        </WhiteBox>
+      <div style={{ paddingBottom: '40px' }}></div>
       </section>
     </div>
 );
