@@ -186,3 +186,6 @@ Adesso per far buildare i server non serve fare il doppio passaggio di prima, pe
 06/06/25 - l_div e anonymize
 - aggiunti file per le gerarchie delle generalizzazioni e identificazione dinamica degli attributi sensibili/quasi id/identificativi
 - l_div funzionante. non penso ci rimetterò le mani
+
+08/06/25
+Scritto algoritmo differential privacy, abbastanza soddisfatta.

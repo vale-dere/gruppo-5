@@ -1,71 +1,103 @@
 import pandas as pd
 import numpy as np
 
-class Laplace:
-    def __init__(self, epsilon, sensitivity=1.0):
-        self.epsilon = epsilon
-        self.sensitivity = sensitivity
-
-    def noise(self, size):
-        scale = self.sensitivity / (self.epsilon + 1e-10)
-        return np.random.laplace(loc=0.0, scale=scale, size=size)
-
-def randomized_response_categorical(series, epsilon):
+def add_laplace_noise(series, epsilon, max_variation):
     """
-    Applica randomized response per dati categorici:
-    Con probabilità p = e^ε / (e^ε + k - 1) mantieni il valore originale,
-    altrimenti scegli randomicamente uno dei valori possibili (escluso il valore originale).
+    Aggiunge rumore laplaciano controllato: la variazione massima è circa ± max_variation.
     """
-    values = series.dropna().unique()
-    k = len(values)
-    if k <= 1:
-        return series  # Se c'è un solo valore, niente da privatizzare
+    scale = max_variation / epsilon
+    noise = np.random.laplace(loc=0.0, scale=scale, size=len(series))
+    noisy_series = series + noise
+    # Clip per rientrare nella variazione consentita
+    return np.clip(noisy_series, series - max_variation, series + max_variation)
 
-    exp_eps = np.exp(epsilon)
-    p = exp_eps / (exp_eps + k - 1)
+def detect_age_column(columns):
+    keywords = ["age", "patient_age", "birth_year"]
+    for col in columns:
+        if any(key in col.lower() for key in keywords):
+            return col
+    return None
 
-    def privatize_value(val):
+def detect_zip_column(columns):
+    keywords = ["zip", "zipcode", "postal", "postcode"]
+    for col in columns:
+        if any(key in col.lower() for key in keywords):
+            return col
+    return None
+
+def truncate_zipcode(zip_series):
+    return zip_series.astype(str).str[:3]
+
+def randomized_response(series, epsilon, categories):
+    """
+    Implementazione semplificata di randomized response per colonna categorica.
+    Restituisce una colonna perturbata.
+    """
+    p = np.exp(epsilon) / (np.exp(epsilon) + len(categories) - 1)
+    
+    def perturb_value(val):
+        if val not in categories:
+            return np.random.choice(categories)
         if np.random.rand() < p:
             return val
         else:
-            other_vals = [v for v in values if v != val]
-            return np.random.choice(other_vals)
+            other_cats = [c for c in categories if c != val]
+            return np.random.choice(other_cats)
+    
+    return series.apply(perturb_value)
 
-    return series.apply(privatize_value)
+def apply_differential_privacy(df: pd.DataFrame, epsilon: float):
+    """
+    Applica Differential Privacy automaticamente alle colonne numeriche di un DataFrame.
 
-def apply_differential_privacy(df: pd.DataFrame, epsilon: float) -> pd.DataFrame:
-    df_copy = df.copy()
+    Args:
+        df (pd.DataFrame): Dataset originale.
+        epsilon (float): Privacy budget.
 
-    for col in df.columns:
-        col_data = df[col]
+    Returns:
+        pd.DataFrame: Dataset privatizzato.
+    """
+    df = df.copy()
+    
+    age_col = detect_age_column(df.columns)
+    zip_col = detect_zip_column(df.columns)
+    
+    # Trattamento ZIP
+    if zip_col and zip_col in df.columns:
+        df[zip_col] = truncate_zipcode(df[zip_col])
 
-        # Numeric columns
-        if pd.api.types.is_numeric_dtype(col_data):
-            col_min = col_data.min()
-            col_max = col_data.max()
-            sensitivity = max(col_max - col_min, 1.0)
-            mech = Laplace(epsilon, sensitivity)
-            noise = mech.noise(len(col_data))
-            df_copy[col] = col_data + noise
+     # Colonne numeriche da privatizzare (escludo ZIP)
+    numeric_cols = [col for col in df.columns if pd.api.types.is_numeric_dtype(df[col]) and col != zip_col]
 
-        # Datetime columns
-        elif pd.api.types.is_datetime64_any_dtype(col_data):
-            timestamps = col_data.astype(np.int64) / 1e9  # Convert to seconds
-            ts_min = timestamps.min()
-            ts_max = timestamps.max()
-            sensitivity = max(ts_max - ts_min, 1.0)
-            mech = Laplace(epsilon, sensitivity)
-            noisy_ts = timestamps + mech.noise(len(col_data))
-            df_copy[col] = pd.to_datetime(noisy_ts, unit='s')
-
-        # Boolean columns
-        elif pd.api.types.is_bool_dtype(col_data):
-            flip_prob = min(0.5, 1 / (epsilon + 1e-6))
-            flips = np.random.rand(len(col_data)) < flip_prob
-            df_copy[col] = col_data ^ flips  # XOR: True <-> False
-
-        # Categorical/Textual columns
+    
+    # Clip valori numerici a intervalli ragionevoli per sensitività nota
+    # Per età: 18-90 (già specificato)
+    # Per altre colonne: utilizziamo 1° e 99° percentile per limitare outlier (più robusto)
+    for col in numeric_cols:
+        if col == age_col:
+            max_variation = 5  # Età può cambiare di massimo ±5 anni
+            df[col] = add_laplace_noise(df[col], epsilon, max_variation)
+            df[col] = df[col].round().clip(18, 90).astype(int)
         else:
-            df_copy[col] = randomized_response_categorical(col_data.fillna(''), epsilon)
+            max_variation = 1 / epsilon
+            lower = df[col].quantile(0.01)
+            upper = df[col].quantile(0.99)
+            df[col] = df[col].clip(lower, upper)
+            df[col] = add_laplace_noise(df[col], epsilon, max_variation).round()
+                
+    # Protezione di tutte le categoriche potenzialmente sensibili
+    categorical_cols = df.select_dtypes(include='object').columns.tolist()
+    # Colonne da escludere dalla perturbazione
+    excluded = []  
+    if zip_col:
+        excluded.append(zip_col)
 
-    return df_copy
+    # Rimuove le escluse dalla lista
+    categorical_cols = [col for col in categorical_cols if col not in excluded]
+    for col in categorical_cols:
+        categories = df[col].dropna().unique().tolist()
+        if len(categories) > 1:
+            epsilon_cat = epsilon * 0.1  # uso frazione del budget per ogni categorica
+            df[col] = randomized_response(df[col], epsilon_cat, categories)
+    
+    return df
