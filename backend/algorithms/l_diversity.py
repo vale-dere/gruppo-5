@@ -44,8 +44,7 @@ def is_l_diverse(group, sensitive_attrs, l):
 
 # Find the minimum level of generalization needed to satisfy l-diversity
 def apply_l_diversity(df: pd.DataFrame, quasi_identifiers: list, sensitive_attr: list, l: int) -> pd.DataFrame:
-    #se non vengono trovati attributi sensibili, l'algoritmo non può essere applicato capisci se chiedere all'utente di specificarlo e aggiunerlo al momento oppure dare errore e basta (large.health file test)
-
+   
     # Load hierarchies for each quasi-identifier
     hierarchies = {}
     
@@ -61,7 +60,7 @@ def apply_l_diversity(df: pd.DataFrame, quasi_identifiers: list, sensitive_attr:
             # Questo non dovrebbe mai succedere con get_builder_for_column
             raise NotImplementedError(f"No hierarchy builder defined for QI: {attr}")
 
-    max_level = 5  # adjust as needed
+    max_level = 5  # generalization level, adjust as needed
     for level in range(max_level + 1):
         levels = {qi: level for qi in quasi_identifiers}
         df_gen = apply_generalization(df, quasi_identifiers, levels, hierarchies)

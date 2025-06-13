@@ -188,4 +188,8 @@ Adesso per far buildare i server non serve fare il doppio passaggio di prima, pe
 - l_div funzionante. non penso ci rimetterò le mani
 
 08/06/25
-Scritto algoritmo differential privacy, abbastanza soddisfatta.
+- Scritto algoritmo differential privacy, abbastanza soddisfatta.
+
+13/06/25
+- integrato con successo k_anon con hierarchy_builders
+- quindi al momento sia k-anon che l-div vanno con una generalizzazione molto semplice, ma funzionale
