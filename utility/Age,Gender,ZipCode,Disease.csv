@@ -1,0 +1,13 @@
+Age,Gender,ZipCode,Disease
+29,F,12345,Flu
+30,F,12345,Flu
+31,M,12345,Cold
+32,M,12345,Cancer
+33,F,12345,Cancer
+34,F,12345,Cancer
+40,M,67890,Flu
+41,F,67890,Flu
+42,M,67890,Flu
+43,F,67890,Cold
+44,M,67890,Cold
+45,F,67890,Cancer
