@@ -195,10 +195,17 @@ Adesso per far buildare i server non serve fare il doppio passaggio di prima, pe
 - quindi al momento sia k-anon che l-div vanno con una generalizzazione molto semplice, ma funzionale
 
 14/06/25 - t-close
-Relizzato codice t-close, funziona abbastanza bene. Da capire se trattare solo le colonne numeriche è giusto.
-
+Realizzato codice t-close, funziona abbastanza bene. Da capire se trattare solo le colonne numeriche è giusto.
 A questo punto differential privacy e t-closeness sono accettabili.
 
+Modifiche:
+
+- private.txt: aggiornamento modifiche
+- t-closeness: algoritmo terminato
+- anonymize.py: Aggiunte alcune righe per creazione cartella in cui salvare il file, creazione della parte di download dataset anonimizzato
+- Homepage.jsx: Aggiunte alcune righe per download del file e creazione pulsante di download dataset completo
+
+A questo punto quando clicchiamo sul bottone "anonymize" e scarica il dataset lato server. Quando premiamo su "download full dataset" scarica il file lato client nella cartella download
 
 
 

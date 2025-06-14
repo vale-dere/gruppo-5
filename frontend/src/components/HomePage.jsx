@@ -18,6 +18,9 @@ function HomePage() {
   const [parameterValue, setParameterValue] = useState("");
   const [previewData, setPreviewData] = useState([]);   
   const [loading, setLoading] = useState(false);
+  const [downloadUrl, setDownloadUrl] = useState(null);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [downloadMessage, setDownloadMessage] = useState("");
 
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
@@ -60,6 +63,12 @@ function HomePage() {
   const handleAnonymize = async () => {
     console.log("Sending anonymization request", selectedFile, selectedAlgorithm, parameterValue); //debug purposes
 
+    // reset link download
+    if (downloadUrl) {
+      URL.revokeObjectURL(downloadUrl);
+      setDownloadUrl(null);
+    }
+
     if (!selectedFile || !selectedAlgorithm || !parameterValue.trim()) {
       alert("Compila tutti i campi e assicurati che il parametro sia valido");
       return;
@@ -95,6 +104,7 @@ function HomePage() {
 
       const json = JSON.parse(text); // parsing manuale
       setPreviewData(json.preview || []);
+      setDownloadUrl(json.download_url);
     } catch (err) {
       console.error("Errore di rete:", err);
       alert("Errore durante l’anonimizzazione. Errore di rete: " + err.message);
@@ -102,6 +112,22 @@ function HomePage() {
       setLoading(false);
     }
   };
+
+  const handleDownloadFull = () => {
+    if (!downloadUrl) {
+      alert("Nessun file da scaricare. Anonimizza prima il dataset.");
+      return;
+    }
+
+    // Apri il link di download
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+    link.setAttribute("download", "anonymized_dataset_full.csv"); 
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  };
+
 
   return (
     <div className="App">
@@ -157,7 +183,7 @@ function HomePage() {
         {/* Preview dei dati anonimizzati */}
         <WhiteBox title="Preview Anonymized Data" >
           {previewData.length > 0 ? (
-            <div style={{ overflowX: 'auto', backgroundColor: 'white', padding: '10px', borderRadius: '6pxì'}}>
+            <div style={{ overflowX: 'auto', backgroundColor: 'white', padding: '10px', borderRadius: '6px'}}>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr>
@@ -183,6 +209,31 @@ function HomePage() {
             </p>
           )}
   
+
+        {previewData.length > 0 && (
+        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+          <button
+            type="button"
+            className="anonymize-button"
+            onClick={handleDownloadFull}
+            disabled={isDownloading}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="2"
+              strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+              <path d="M12 5v14M5 12l7 7 7-7" />
+            </svg>
+            Download full anonymized file
+            {isDownloading && <span className="spinner" style={{ marginLeft: 10 }}></span>}
+          </button>
+
+          {downloadMessage && (
+            <div style={{ marginTop: '10px', color: isDownloading ? 'blue' : 'green' }}>
+              {downloadMessage}
+            </div>
+          )}
+        </div>
+      )}
+
         </WhiteBox>
       <div style={{ paddingBottom: '40px' }}></div>
       </section>
@@ -191,3 +242,5 @@ function HomePage() {
 }
 
 export default HomePage;
+
+

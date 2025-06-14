@@ -1,9 +1,12 @@
 #what the server does when someone sends a POST to the /anonymize path
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException
+from fastapi.responses import FileResponse
 import pandas as pd
 from io import BytesIO
 import numpy as np
 import json
+import os
+import uuid
 
 from algorithms.k_anonymity import apply_k_anonymity
 from algorithms.l_diversity import apply_l_diversity
@@ -12,6 +15,11 @@ from algorithms.differential_privacy import apply_differential_privacy
 from config.keywords import IDENTIFIER_KEYWORDS, SENSITIVE_KEYWORDS, QUASI_IDENTIFIER_KEYWORDS
 
 router = APIRouter()
+
+# Creo cartella per salvare i file
+OUTPUT_DIR = "generated_files"
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
 def sanitize_for_json(df):
     # Sostituisci inf con NaN
     df = df.replace([np.inf, -np.inf], np.nan)
@@ -192,5 +200,28 @@ async def anonymize(
     except Exception as e:
         print("Errore nella serializzazione JSON:", e)
     preview = result_clean.head().to_dict(orient="records")
-    return {"preview": preview}
+    
+    # 7. Salvataggio del file anonimizzato
+    try:
+        file_id = str(uuid.uuid4())
+        output_path = os.path.join(OUTPUT_DIR, f"{file_id}.csv")
+        result.to_csv(output_path, index=False)
+        print(f"File anonimizzato salvato in: {output_path}")
+    except Exception as e:
+        print("Errore durante il salvataggio del file:", e)
+        raise HTTPException(status_code=500, detail="Errore durante il salvataggio del file anonimizzato.")
 
+    download_url = f"http://localhost:8080/download/{file_id}"
+
+    return {
+    "preview": preview,
+    "data": result_clean.to_dict(orient="records"),  # Manda anche il dataset completo per salvarlo dopo
+    "download_url": download_url
+}
+
+@router.get("/download/{file_id}")
+async def download_anonymized_file(file_id: str):
+    file_path = os.path.join(OUTPUT_DIR, f"{file_id}.csv")
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="File non trovato.")
+    return FileResponse(path=file_path, filename=f"{file_id}.csv", media_type='text/csv')
