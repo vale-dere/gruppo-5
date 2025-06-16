@@ -1,4 +1,5 @@
-//use the variables to create the cloud run service
+#defines frontend and backend
+
 resource "google_cloud_run_service" "backend" {
   name     = "anonimadata-backend"
   location = var.region
@@ -10,11 +11,36 @@ resource "google_cloud_run_service" "backend" {
         ports {
           container_port = 8080
         }
+        env {
+          name  = "BUCKET_NAME"
+          value = google_storage_bucket.dataset_bucket.name
+        }
       }
     }
   }
 
   traffics {
+    percent         = 100
+    latest_revision = true
+  }
+}
+
+resource "google_cloud_run_service" "frontend" {
+  name     = "anonimadata-frontend"
+  location = var.region
+
+  template {
+    spec {
+      containers {
+        image = var.frontend_image
+        ports {
+          container_port = 80
+        }
+      }
+    }
+  }
+
+  traffic {
     percent         = 100
     latest_revision = true
   }

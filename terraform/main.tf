@@ -1,16 +1,13 @@
-//initialize provider and configures terraform
-terraform {
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = ">= 4.0"
-    }
-  }
+#entry point
 
-  required_version = ">= 1.3"
+module "storage" {
+  source = "./storage"
 }
 
-provider "google" {
-  project = var.project_id
-  region  = var.region //file variables parameters
+module "cloudrun" {
+  source         = "./cloudrun"
+  backend_image  = var.backend_image
+  frontend_image = var.frontend_image
+  project_id     = var.project_id
+  region         = var.region
 }

@@ -8,3 +8,6 @@ variable "region" {
   type        = string
   default     = "europe-west1"
 }
+
+//variable "backend_image" {}
+variable "frontend_image" {}
