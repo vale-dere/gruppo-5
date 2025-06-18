@@ -42,3 +42,6 @@ Thumbs.db
 
 #pycache
 *.pyc
+
+/backend/firebase-service-account.json
+firebase-service-account.json
