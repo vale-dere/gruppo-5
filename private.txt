@@ -266,6 +266,10 @@ Adesso per far buildare i server non serve fare il doppio passaggio di prima, pe
 - Applicati aggiornamenti per sincronizzare le immagini dei container con le ultime versioni presenti nel repository, tramite terraform apply.
 
 
- 
+18/06/25 - implementato con successo login firebase
+- adesso il login funziona
+- DANI devi creare un file .env nella cartella gruppo-5 e un file .env nella cartella frontend con ciò che ti dirò poi
+- bisogna proteggere la pagina localhost:8081/home perchè è direttamente accessibile (ora mi ci metto)
+- va aggiustata la grafica del login magari perchè ho commentato tutta la pagina vecchia e non ho badato all'estetica
 
 
