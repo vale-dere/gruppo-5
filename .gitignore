@@ -45,3 +45,5 @@ Thumbs.db
 
 /backend/firebase-service-account.json
 firebase-service-account.json
+
+generated-files/
