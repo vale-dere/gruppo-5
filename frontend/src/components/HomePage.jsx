@@ -7,11 +7,14 @@ import WhiteBox from './WhiteBox';
 import FileUpload from './FileUpload';
 import AlgorithmSelector from './AlgorithmSelector';
 import { useNavigate } from 'react-router-dom';
+import { getAuth, signOut, getIdToken } from "firebase/auth"; // Importa Firebase Auth
 
 function HomePage() {
   //console.log("HomePage rendered");
   
-  const navigate = useNavigate();  
+  const navigate = useNavigate(); 
+  const auth = getAuth();
+ 
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedAlgorithm, setSelectedAlgorithm] = useState("");
   //Aggiuno uno stato per la preview del dataset
@@ -21,6 +24,17 @@ function HomePage() {
   const [downloadUrl, setDownloadUrl] = useState(null);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadMessage, setDownloadMessage] = useState("");
+
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        // Logout avvenuto con successo
+        navigate('/'); // Torna alla pagina di login
+      })
+      .catch((error) => {
+        console.error("Errore durante il logout:", error);
+      });
+  };
 
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
@@ -150,7 +164,7 @@ function HomePage() {
         <button 
           type="button"
           className="button" 
-          onClick={() => navigate('/')}
+          onClick={handleLogout}
         >
           Logout
         </button> 
