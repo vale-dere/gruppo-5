@@ -205,5 +205,67 @@ Adesso per far buildare i server non serve fare il doppio passaggio di prima, pe
 - A questo punto quando clicchiamo sul bottone "anonymize" e scarica il dataset lato server. Quando premiamo su "download full dataset" scarica il file lato client nella cartella download
 
 14/06/25 - terraform files
-- ho scritto i file terraform che dovrebbero servirci
+- ho scritto i file terraform che dovrebbero servirci (spoiler no)
+
+16/06/25 - setu GCP (che Dio ci aiuti)
+- numero progetto: 583549727222 ID PROGETTO: gruppo-5
+- per sicurezza in caso di danni, mi segno tutti i comandi lanciati
+    1- gcloud auth login
+    2- attivate api {
+        gcloud services enable \
+        compute.googleapis.com \
+        run.googleapis.com \
+        iam.googleapis.com \
+        cloudresourcemanager.googleapis.com \
+        firestore.googleapis.com \
+        storage.googleapis.com \
+        iamcredentials.googleapis.com \
+        firebase.googleapis.com \
+        cloudbuild.googleapis.com
+    }
+    3- creato bucket GCS per terraform per salvare lo stato condiviso di terraform [comando: gsutil mb -p gruppo-5 -l europe-west1 gs://tfstate-anonimadata/]
+    4- lanciato terraform init dalla cartella terraform (probabilmente questo comando lo devi lanciare pure tu Dani), se dà errore di auth lanciare gcloud auth application-default login
+    5- deploy del frontend (Cloud CDN + HTTPS Load Balancer)
+        - caricati file statici nel bucket GCS con  gsutil cp -r dist/* gs://anonimadata-frontend-bucket/
+        - adesso c'è un ip pubblico associato al load balancer, il frontend servito da GCS per evitare pubblico allUsers, CDN abilitato per caching e velocità
+        - per ora c'è solo connessione http (porta 80), se vogliamo https ci sono configurazioni extra
+        - lanciato gsutil -m rsync -r ./dist gs://anonimadata-frontend-bucket
+        - il frontend dovrebbe essere accessibile da http://storage.googleapis.com/anon-frontend-bucket/index.html ma da' problemi di auth
+        - ABBANDONATO BUCKET GCS E DEPLOYATO ANCHE IL FRONTEND SU CLOUDRUN
+        - “Per motivi di rapidità e semplicità, e dato che la traccia richiede solo la dimostrazione di scalabilità e affidabilità su GCP, abbiamo utilizzato l’URL HTTPS predefinito fornito da Cloud Run. Questo URL supporta già HTTPS e OAuth 2.0 in modo sicuro, evitando così la complessità e i rischi di gestione di un dominio personalizzato, pur garantendo una piattaforma scalabile, affidabile e sicura.”
+
+17/06/25 - deploy cloudrun
+- lanciato $ gcloud services enable artifactregistry.googleapis.com
+- lanciato gcloud artifacts repositories create anonimadata-repo \
+  --repository-format=docker \
+  --location=europe-west1 \
+  --description="Repo immagini Docker per anonimadata"
+- taggato e pushato il backend e il frontend :docker tag anonimadata-backend europe-west1-docker.pkg.dev/gruppo-5/anonimadata-repo/backend
+ e docker push europe-west1-docker.pkg.dev/gruppo-5/anonimadata-repo/backend
+- fatto il deploy solo del backend lanciando gcloud run deploy backend-service \
+  --image europe-west1-docker.pkg.dev/gruppo-5/anonimadata-repo/backend \
+  --region europe-west1 \
+  --platform managed \
+  --allow-unauthenticated
+  - mi dava warning su autorizzazione, perciò per ora siamo autorizzate solo io e te dani
+
+  - riassunto:
+    1- Sistemato Dockerfile del frontend (porta 8080, config nginx).
+    2- 📦 Costruita l'immagine Docker localmente.
+    3- 🐳 Push delle immagini su Artifact Registry.
+    4- ☁️ Deploy del backend completato e testato.
+    5- 🧪 Verificato che il backend funzioni, almeno in modalità temporaneamente pubblica
+- ho fatto la stessa identica cosa sul frontend e con il curl + token va, solo che senza login non possiamo accedere al sito
+- ho provato a sistemare terraform (visto che ho usato solo la riga di comando), ma mi da problemi di autenticazione, risolvo domani
+
+18/06/25 - sistemato terraform
+- Sono state definite risorse Terraform per i servizi Cloud Run di backend e frontend, specificando nome, regione, immagine container e porta di ascolto (8080 per backend, 80 per frontend).
+- Per i permessi, sono stati configurati i binding IAM roles/run.invoker per consentire a specifici utenti Google di invocare i servizi, garantendo sicurezza e accesso controllato. (poi da cambiare quando avremo auth)
+- È stato commentato lo stato remoto tramite bucket GCS (in precedenza configurato, opzionale a seconda del progetto).
+- Risorse Cloud Run già esistenti (create manualmente via CLI o console) sono state importate nello stato Terraform tramite il comando terraform import, allineando così lo stato locale con l’infrastruttura reale.
+- Applicati aggiornamenti per sincronizzare le immagini dei container con le ultime versioni presenti nel repository, tramite terraform apply.
+
+
+ 
+
 

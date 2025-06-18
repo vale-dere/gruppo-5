@@ -15,7 +15,9 @@ FROM nginx:alpine
 COPY --from=builder /app/dist /usr/share/nginx/html
 
 # Replace nginx default config to support SPA routing
-COPY ../nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf  
 
-EXPOSE 80
+# Expose port 8080 for Cloud Run
+EXPOSE 8080
+
 CMD ["nginx", "-g", "daemon off;"]
