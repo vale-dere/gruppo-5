@@ -84,11 +84,24 @@ function HomePage() {
     form.append("file", selectedFile);
     form.append("algorithm", selectedAlgorithm);  // es. "k-anonymity"
     form.append("parameter", cleanParameter);     // es. "2" o "0.5"
-  
+
+    //********* autenticazione */
     try {
+      const user = auth.currentUser;
+      if (!user) {
+        alert("Utente non autenticato.");
+        return;
+      }
+    
+      const token = await getIdToken(user);
+    //*********** */
+
       const res = await fetch("http://localhost:8080/anonymize", {
         method: "POST",
         body: form,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
   
       console.log("Status:", res.status);
@@ -100,7 +113,7 @@ function HomePage() {
       const error = JSON.parse(text);
       alert("Errore backend: " + error.detail);
       return;
-  }
+      }
 
       const json = JSON.parse(text); // parsing manuale
       setPreviewData(json.preview || []);

@@ -1,8 +1,10 @@
-from fastapi import Request, HTTPException
-from firebase_admin import auth
+import os
+import firebase_admin
+from firebase_admin import credentials, auth
+from fastapi import Request, HTTPException, Depends, APIRouter
 
-''' DA SCOMMENTARE DOPO AVER AVUTO FILE JSON
-# Load Firebase service account credentials (serve davvero?)
+
+# Load Firebase service account credentials
 cred_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS", "firebase-service-account.json")
 if not firebase_admin._apps:
     cred = credentials.Certificate(cred_path)
@@ -12,8 +14,8 @@ if not firebase_admin._apps:
 # Dependency to verify Firebase token in Authorization header
 async def verify_token(request: Request):
     auth_header = request.headers.get("Authorization")
-    if not auth_header:
-        raise HTTPException(status_code=401, detail="Missing Authorization Header")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Missing or invalid Authorization Header")
 
     token = auth_header.split(" ")[1]
     try:
@@ -21,13 +23,11 @@ async def verify_token(request: Request):
         return decoded_token
     except Exception:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
-'''
-# Placeholder function for token verification
-async def verify_token(request: Request):
-    return {"email": "dev@example.com"}  # fake user info for now
 
+'''
 # Public route to verify backend is running
 # doesn't allow upload, download or access to sensitive data. Useful for testing, health checks and api discovery
 @app.get("/")
 def root():
     return {"message": "Anonymizer backend is running!"}
+'''

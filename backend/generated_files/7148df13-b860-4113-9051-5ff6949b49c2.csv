@@ -1,0 +1,11 @@
+age,zipcode,disease
+20-39,*,flu
+20-39,*,cancer
+20-39,*,cold
+40-59,*,flu
+20-39,*,cold
+20-39,*,cancer
+40-59,*,flu
+40-59,*,diabetes
+20-39,*,cancer
+20-39,*,flu

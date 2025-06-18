@@ -7,6 +7,8 @@ import numpy as np
 import json
 import os
 import uuid
+from fastapi import APIRouter, Depends
+from auth.firebase_auth import verify_token
 
 from algorithms.k_anonymity import apply_k_anonymity
 from algorithms.l_diversity import apply_l_diversity
@@ -15,6 +17,10 @@ from algorithms.differential_privacy import apply_differential_privacy
 from config.keywords import IDENTIFIER_KEYWORDS, SENSITIVE_KEYWORDS, QUASI_IDENTIFIER_KEYWORDS
 
 router = APIRouter()
+
+@router.get("/protected")
+async def protected_route(user_data=Depends(verify_token)):
+    return {"message": "Accesso autorizzato!", "user_id": user_data['uid']}
 
 # Creo cartella per salvare i file
 OUTPUT_DIR = "generated_files"
@@ -113,6 +119,7 @@ async def anonymize():
 
 @router.post("/anonymize")
 async def anonymize(
+    user_data=Depends(verify_token),
     file: UploadFile = File(...),
     algorithm: str = Form(...),
     parameter: str = Form(...)
@@ -220,7 +227,7 @@ async def anonymize(
 }
 
 @router.get("/download/{file_id}")
-async def download_anonymized_file(file_id: str):
+async def download_anonymized_file(file_id: str, user_data=Depends(verify_token)):
     file_path = os.path.join(OUTPUT_DIR, f"{file_id}.csv")
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="File non trovato.")
