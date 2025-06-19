@@ -107,7 +107,7 @@ function HomePage() {
         return;
       }
     
-      const token = await getIdToken(user);
+      const token = await getIdToken(user, true); // true for force refresh
     //*********** */
 
       const res = await fetch("http://localhost:8080/anonymize", {
@@ -123,15 +123,20 @@ function HomePage() {
       const text = await res.text(); // non usare .json() subito
       console.log("Raw response:", text);
 
-      if (!res.ok) { //debug purposes
+      if (!res.ok) {
+        if (res.status === 401) {
+          alert("Sessione scaduta. Esegui di nuovo il login.");
+          await signOut(auth);     // logout automatico
+          navigate("/");           // redirect
+          return;
+      }
       const error = JSON.parse(text);
       alert("Errore backend: " + error.detail);
       return;
-      }
-
-      const json = JSON.parse(text); // parsing manuale
-      setPreviewData(json.preview || []);
-      setDownloadUrl(json.download_url);
+    }
+    const json = JSON.parse(text);
+    setPreviewData(json.preview || []);
+    setDownloadUrl(json.download_url);
     } catch (err) {
       console.error("Errore di rete:", err);
       alert("Errore durante l’anonimizzazione. Errore di rete: " + err.message);
@@ -139,24 +144,8 @@ function HomePage() {
       setLoading(false);
     }
   };
-
-  /* old
-  const handleDownloadFull = () => {
-    if (!downloadUrl) {
-      alert("Nessun file da scaricare. Anonimizza prima il dataset.");
-      return;
-    }
-
-    // Apri il link di download
-    const link = document.createElement("a");
-    link.href = downloadUrl;
-    link.setAttribute("download", "anonymized_dataset_full.csv"); 
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-  };
-*/
-    // Funzione per scaricare il file anonimo con autenticazione Bearer token
+  
+  // Funzione per scaricare il file anonimo con autenticazione Bearer token
   const handleDownloadFull = async () => {
     if (!downloadUrl) {
       alert("Nessun file da scaricare. Anonimizza prima il dataset.");
@@ -174,13 +163,20 @@ function HomePage() {
         setDownloadMessage("");
         return;
       }
-      const token = await getIdToken(user);
+      const token = await getIdToken(user, true);
 
       const res = await fetch(downloadUrl, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      if (res.status === 401) {
+      alert("Sessione scaduta. Esegui di nuovo il login.");
+      await signOut(auth);
+      navigate("/");
+      return;
+      }
 
       if (!res.ok) {
         const errorText = await res.text();
