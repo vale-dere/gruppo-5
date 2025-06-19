@@ -1,3 +1,4 @@
+#si può anche valutare eliminazione che crea solo caos
 # Step 1: Build app with Vite
 FROM node:20 AS builder
 
