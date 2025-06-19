@@ -140,6 +140,7 @@ function HomePage() {
     }
   };
 
+  /* old
   const handleDownloadFull = () => {
     if (!downloadUrl) {
       alert("Nessun file da scaricare. Anonimizza prima il dataset.");
@@ -154,7 +155,64 @@ function HomePage() {
     link.click();
     link.remove();
   };
+*/
+    // Funzione per scaricare il file anonimo con autenticazione Bearer token
+  const handleDownloadFull = async () => {
+    if (!downloadUrl) {
+      alert("Nessun file da scaricare. Anonimizza prima il dataset.");
+      return;
+    }
+    
+    setIsDownloading(true);
+    setDownloadMessage("Scaricamento in corso...");
 
+    try {
+      const user = auth.currentUser;
+      if (!user) {
+        alert("Utente non autenticato.");
+        setIsDownloading(false);
+        setDownloadMessage("");
+        return;
+      }
+      const token = await getIdToken(user);
+
+      const res = await fetch(downloadUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        alert("Errore nel download: " + errorText);
+        setIsDownloading(false);
+        setDownloadMessage("");
+        return;
+      }
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+
+      const filename = downloadUrl.split("/").pop() || "anonymized_dataset_full.csv";
+      a.download = filename;
+
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+
+      setDownloadMessage("Download completato!");
+    } catch (err) {
+      console.error("Errore download file:", err);
+      alert("Errore durante il download: " + err.message);
+      setDownloadMessage("");
+    } finally {
+      setIsDownloading(false);
+      setTimeout(() => setDownloadMessage(""), 3000); // pulisce messaggio dopo 3 sec
+    }
+  };
 
   return (
     <div className="App">
