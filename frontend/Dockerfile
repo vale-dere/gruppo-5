@@ -1,4 +1,4 @@
-#si può anche valutare eliminazione che crea solo caos
+#è l'immagine statica che usa cloud run!
 # Step 1: Build app with Vite
 FROM node:20 AS builder
 

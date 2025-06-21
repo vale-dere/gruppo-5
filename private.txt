@@ -277,4 +277,12 @@ Adesso per far buildare i server non serve fare il doppio passaggio di prima, pe
 - reso funzionante anche il tasto di logout
 - per adesso se l’utente fa login, poi chiude il browser senza fare logout, al riavvio sarà ancora autenticato. La sessione dura praticamente fino a logout esplicito, revoca lato server, o cancellazione dati browser. Se si vuole che la sessione duri solo finché la scheda è aperta, devi cambiare la persistenza a session [da capire se abbiamo tempo/voglia/dobbiamo farlo per forza]
 
-
+20/06/25 - cloud run, firebase e problemi corse
+- in locale funziona ancora tutto benissimo, il problema è quando si vuole usare GCP perchè il fatto che sia il frontend che il backend non siano pubblicamente accessibili, impedisce il normale funzionamento anche se il codice è corretto
+- ho provato varie strategie, tra cui anche cloud endpoint, ma non è cambiato nulla
+- per accedere da browser al frontend con GCP per ora bisogna usare proxy gcloud col comando  gcloud run services proxy frontend-service --project gruppo-5 --region europe-west1
+- tramite curl il frontend funziona così curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" https://frontend-service-583549727222.europe-west1.run.app/
+- il backend invece così  curl -X POST "https://backend-service-hclc243hba-ew.a.run.app/anonymize"   -H "Authorization: Bearer eyJhbGciO...[insomma tutto il token firebase]"   -F "file=@/c/Users/valen/OneDrive/Desktop/gruppo-5/utility/AgeGenderZipCodeDisease.csv"   -F "algorithm=k-anonymity"   -F "parameter=3"
+- token firebase =/= identity tokendi gcp 
+- ho scritto i codici deploy-frontend.sh e deploy-backend.sh da lancaire direttamente nella root per eseguire in maniera automatica aggiornamento dell'immagine, con relativo push su cloud run e anche apply su terraform
+- sinceramente non so come risolvere il non poter settare come allUsers l'autenticazione del frontend e del backend
