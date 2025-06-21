@@ -1,19 +1,26 @@
-/*
-import React, { useState } from 'react';
+import React from 'react';
 import '../styles/Login.css';
 import WhiteBox from './WhiteBox';
 import backgroundImage from '../assets/banner-bg.jpg';
+import iconImage from '../assets/login_icon.png';
 import { useNavigate } from 'react-router-dom';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { auth } from '../firebase';
 
-export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const LoginPage = () => {
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    console.log('Email:', email, 'Password:', password);
-    navigate('/home'); // Simula login
+  const handleGoogleLogin = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const token = await result.user.getIdToken();
+      localStorage.setItem('firebaseToken', token);
+      navigate('/home');
+    } catch (error) {
+      console.error('Errore durante il login con Google:', error);
+      alert('Autenticazione fallita. Riprova.');
+    }
   };
 
   return (
@@ -23,69 +30,24 @@ export default function LoginPage() {
         style={{ backgroundImage: `url(${backgroundImage})` }}
       />
       <div className="login-content">
-      <WhiteBox title="Login to AnonimaData" className="login-box">
-        <form className="login-form" onSubmit={handleLogin}>
-          <input
-            type="email"
-            placeholder="Email"
-            className="login-input"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="login-input"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <button type="submit" className="button">Login</button>
-        </form>
-      </WhiteBox>
+        <WhiteBox title="" className="login-box-large">
+          <div className="login-form">
+            <img src={iconImage} alt="Login Icon" className="login-icon" />
+            <h2 className="login-title">
+              Login to <span className="highlight">AnonimaData</span>
+            </h2>
+            <button onClick={handleGoogleLogin} className="button google-button">
+              Accedi con Google
+            </button>
+          </div>
+        </WhiteBox>
       </div>
-    </div>
-  );
-}
-*/
-
-import React from 'react';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { auth } from '../firebase'; // Assicurati che firebase.js sia importato correttamente
-import { useNavigate } from 'react-router-dom';
-
-const LoginPage = () => {
-  const navigate = useNavigate();
-
-  const handleGoogleLogin = async () => {
-    try {
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-
-      // Recupera l'ID token (JWT) da inviare al backend
-      const token = await result.user.getIdToken();
-
-      // Salva il token localmente (es. per fetch protette)
-      localStorage.setItem('firebaseToken', token);
-
-      // 🔁 Redirect alla pagina protetta
-      navigate('/home');
-    } catch (error) {
-      console.error('Errore durante il login con Google:', error);
-      alert('Autenticazione fallita. Riprova.');
-    }
-  };
-
-  return (
-    <div style={{ padding: '2rem' }}>
-      <h2>Login</h2>
-      <button onClick={handleGoogleLogin}>
-        Accedi con Google
-      </button>
     </div>
   );
 };
 
 export default LoginPage;
+
 
 /*
 Cosa fa questo componente:
