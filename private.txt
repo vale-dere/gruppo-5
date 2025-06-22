@@ -286,3 +286,7 @@ Adesso per far buildare i server non serve fare il doppio passaggio di prima, pe
 - token firebase =/= identity tokendi gcp 
 - ho scritto i codici deploy-frontend.sh e deploy-backend.sh da lancaire direttamente nella root per eseguire in maniera automatica aggiornamento dell'immagine, con relativo push su cloud run e anche apply su terraform
 - sinceramente non so come risolvere il non poter settare come allUsers l'autenticazione del frontend e del backend
+
+21/06/25 - firestore
+- ho implementato il firestore, solo che non ho modo di sapere se va o no sempre per il nostro problema ¯_(ツ)_/¯
+- adesso non va più questo comando curl -X POST "https://backend-service-hclc243hba-ew.a.run.app/anonymize"   -H "Authorization: Bearer eyJhbGciO...[insomma tutto il token firebase]"   -F "file=@/c/Users/valen/OneDrive/Desktop/gruppo-5/utility/AgeGenderZipCodeDisease.csv"   -F "algorithm=k-anonymity"   -F "parameter=3" [dà 401 unauthorized] e non so se non è mai andato e sono scema io oppure se per motivi a me ignoti ora non va anche se non ho cambiato impostazioni di auth

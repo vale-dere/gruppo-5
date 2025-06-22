@@ -1,8 +1,12 @@
-from fastapi import FastAPI, Request, Response
-from routes import anonymize
+from fastapi import FastAPI, Request, Response, HTTPException
+from routes import anonymize, save_metadata
 from fastapi.middleware.cors import CORSMiddleware
+from firestore.firestore_client import get_firestore_client
+import logging
+
 
 app = FastAPI()  # creates a server
+logger = logging.getLogger("uvicorn")
 
 origins = [
     "http://localhost:8080",         # sviluppo: proxy cloudrun
@@ -27,7 +31,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-'''
+''' gestione richieste OPTIONS per CORS
 @app.middleware("http")
 async def options_middleware(request: Request, call_next):
     if request.method == "OPTIONS":
@@ -43,6 +47,8 @@ async def options_middleware(request: Request, call_next):
     return await call_next(request)
 '''
 app.include_router(anonymize.router)
+
+app.include_router(save_metadata.router)
 
 @app.get("/test-cors")
 def test():

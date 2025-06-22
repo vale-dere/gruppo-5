@@ -5,7 +5,7 @@ resource "google_cloud_run_service" "frontend_service" {
   template {
     spec {
       containers {
-        image = "europe-west1-docker.pkg.dev/gruppo-5/anonimadata-repo/frontend:v20250621-0222"
+        image = "europe-west1-docker.pkg.dev/gruppo-5/anonimadata-repo/frontend:v20250621-1856"
         ports {
           container_port = 8080
         }

@@ -5,3 +5,4 @@ numpy
 diffprivlib
 python-multipart
 firebase-admin
+google-cloud-firestore
