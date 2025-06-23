@@ -24,5 +24,5 @@ echo "Running terraform apply for frontend..."
 cd terraform
 # Esegui terraform apply per aggiornare il deployment
 #terraform apply -auto-approve
-terraform apply 
+terraform apply -var-file="secret_variables.tfvars"
 cd ..

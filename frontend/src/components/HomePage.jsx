@@ -111,10 +111,8 @@ function HomePage() {
       console.log("User token:", token); // debug purposes
     //*********** */
 
-      const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";  // fallback dev
-      //const BASE_URL = "http://localhost:8080"; // per debug locale
+      const BASE_URL = import.meta.env.VITE_API_BASE_URL; 
       console.log("Base URL:", BASE_URL); // debug purposes
-      //const res = await fetch("http://localhost:8080/anonymize"
       const res = await fetch(`${BASE_URL}/anonymize`, {
         method: "POST",
         body: form,

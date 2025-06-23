@@ -17,6 +17,7 @@ frontend/dist-ssr/
 *.local
 .env
 .env.local
+.env.production
 .env.*.local
 
 # Editor directories and files
@@ -35,6 +36,7 @@ terraform/.terraform/
 terraform/terraform.tfstate
 terraform/terraform.tfstate.backup
 terraform/.terraform.lock.hcl
+terraform/secret_variables.tfvars
 
 # Ignora file temporanei di sistema
 .DS_Store

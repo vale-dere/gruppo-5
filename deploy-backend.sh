@@ -21,5 +21,5 @@ sed -i.bak "s|image = \".*\"|image = \"$IMAGE\"|" ./terraform/backend.tf
 echo "Running terraform apply for backend..."
 cd terraform
 #terraform apply -auto-approve
-terraform apply
+terraform apply -var-file="secret_variables.tfvars"
 cd ..

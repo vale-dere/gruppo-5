@@ -9,6 +9,10 @@ import os
 import uuid
 from fastapi import APIRouter, Depends
 from auth.firebase_auth import verify_token
+from storage.storage import upload_blob
+from google.cloud import storage
+import datetime
+from datetime import timedelta
 
 from algorithms.k_anonymity import apply_k_anonymity
 from algorithms.l_diversity import apply_l_diversity
@@ -17,6 +21,10 @@ from algorithms.differential_privacy import apply_differential_privacy
 from config.keywords import IDENTIFIER_KEYWORDS, SENSITIVE_KEYWORDS, QUASI_IDENTIFIER_KEYWORDS
 
 router = APIRouter()
+
+USE_GCS = False  # Imposta a True se vuoi usare Google Cloud Storage, altrimenti False per il locale
+GCS_BUCKET_NAME = "gruppo5-datasets"  # Nome del bucket GCS
+
 
 @router.get("/protected")
 async def protected_route(user_data=Depends(verify_token)):
@@ -209,16 +217,41 @@ async def anonymize(
     preview = result_clean.head().to_dict(orient="records")
     
     # 7. Salvataggio del file anonimizzato
-    try:
-        file_id = str(uuid.uuid4())
-        output_path = os.path.join(OUTPUT_DIR, f"{file_id}.csv")
-        result.to_csv(output_path, index=False)
-        print(f"File anonimizzato salvato in: {output_path}")
-    except Exception as e:
-        print("Errore durante il salvataggio del file:", e)
-        raise HTTPException(status_code=500, detail="Errore durante il salvataggio del file anonimizzato.")
+    file_id = str(uuid.uuid4())
+    filename = f"{file_id}.csv"
 
-    download_url = f"http://localhost:8080/download/{file_id}"
+    if USE_GCS:
+        try:
+            # Salva temporaneamente in memoria
+            output_buffer = BytesIO()
+            result.to_csv(output_buffer, index=False)
+            output_buffer.seek(0)
+
+            # Upload su Cloud Storage
+            client = storage.Client()
+            bucket = client.bucket(GCS_BUCKET_NAME)
+            blob = bucket.blob(f"anonymized/{filename}")
+            blob.upload_from_file(output_buffer, content_type="text/csv")
+
+            # Genera URL firmato valido per 15 minuti
+            expiration = datetime.timedelta(minutes=15)
+            download_url = blob.generate_signed_url(expiration=expiration)
+
+            print(f"File caricato su GCS: gs://{GCS_BUCKET_NAME}/anonymized/{filename}")
+            print(f"URL di download temporaneo: {download_url}")
+
+        except Exception as e:
+            print("Errore durante il salvataggio su GCS:", e)
+            raise HTTPException(status_code=500, detail="Errore durante il salvataggio del file su GCS.")
+    else:
+        try:
+            output_path = os.path.join(OUTPUT_DIR, filename)
+            result.to_csv(output_path, index=False)
+            download_url = f"http://localhost:8080/download/{file_id}"
+            print(f"File anonimizzato salvato localmente in: {output_path}")
+        except Exception as e:
+            print("Errore durante il salvataggio locale:", e)
+            raise HTTPException(status_code=500, detail="Errore durante il salvataggio locale.")
 
     return {
     "preview": preview,

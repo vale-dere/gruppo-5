@@ -290,3 +290,9 @@ Adesso per far buildare i server non serve fare il doppio passaggio di prima, pe
 21/06/25 - firestore
 - ho implementato il firestore, solo che non ho modo di sapere se va o no sempre per il nostro problema ¯_(ツ)_/¯
 - adesso non va più questo comando curl -X POST "https://backend-service-hclc243hba-ew.a.run.app/anonymize"   -H "Authorization: Bearer eyJhbGciO...[insomma tutto il token firebase]"   -F "file=@/c/Users/valen/OneDrive/Desktop/gruppo-5/utility/AgeGenderZipCodeDisease.csv"   -F "algorithm=k-anonymity"   -F "parameter=3" [dà 401 unauthorized] e non so se non è mai andato e sono scema io oppure se per motivi a me ignoti ora non va anche se non ho cambiato impostazioni di auth
+
+23/06/25 - google storage
+- ho implementato google storage, anche qui non so se è tutto ok o c'è qualche errore, per adesso non errori
+- ho implementato i google secrets per alcune key sensibili, da passare a dani il file secret_variables.tfvar non versionato
+- ho aggiunto lo "switch" tra modalità locale e GCP nella rotta anonymize.py, necessaria per disinguire lo sviluppo locale con GCP. Quindi bisogna ricordarsi di modificare quella variabile quando si cambia modalità
+- non c'è più bisogno di commentare/scommentare la riga BASE_URL nell'HomePage.jsx  perchè adesso lo switch tra locale e GCP è fatto in maniera automatica

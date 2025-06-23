@@ -5,9 +5,65 @@ resource "google_cloud_run_service" "frontend_service" {
   template {
     spec {
       containers {
-        image = "europe-west1-docker.pkg.dev/gruppo-5/anonimadata-repo/frontend:v20250621-1856"
+        image = "europe-west1-docker.pkg.dev/gruppo-5/anonimadata-repo/frontend:v20250623-1324"
+
         ports {
           container_port = 8080
+        }
+
+        env {
+          name  = "VITE_FIREBASE_AUTH_DOMAIN"
+          value = var.firebase_auth_domain
+        }
+
+        env {
+          name  = "VITE_FIREBASE_PROJECT_ID"
+          value = var.firebase_project_id
+        }
+
+        env {
+          name  = "VITE_FIREBASE_STORAGE_BUCKET"
+          value = var.firebase_storage_bucket
+        }
+
+        env {
+          name = "VITE_FIREBASE_API_KEY"
+          value_from {
+            secret_key_ref {
+              name = google_secret_manager_secret.firebase_api_key.secret_id
+              key  = "latest"
+            }
+          }
+        }
+
+        env {
+          name = "VITE_FIREBASE_MESSAGING_SENDER_ID"
+          value_from {
+            secret_key_ref {
+              name = google_secret_manager_secret.firebase_messaging_sender_id.secret_id
+              key  = "latest"
+            }
+          }
+        }
+
+        env {
+          name = "VITE_FIREBASE_APP_ID"
+          value_from {
+            secret_key_ref {
+              name = google_secret_manager_secret.firebase_app_id.secret_id
+              key  = "latest"
+            }
+          }
+        }
+
+        env {
+          name = "VITE_API_BASE_URL"
+          value_from {
+            secret_key_ref {
+              name = google_secret_manager_secret.vite_api_base_url.secret_id
+              key  = "latest"
+            }
+          }
         }
       }
     }
@@ -18,18 +74,6 @@ resource "google_cloud_run_service" "frontend_service" {
     latest_revision = true
   }
 }
-/*
-# IAM binding per frontend (autorizzazioni invoker)
-resource "google_cloud_run_service_iam_binding" "frontend_invokers" {
-  service  = google_cloud_run_service.frontend_service.name
-  location = google_cloud_run_service.frontend_service.location
-  role     = "roles/run.invoker"
-  members = [
-    "user:valentina.derespinis@fidogroup.it",
-    "user:danila.meleleo@fidogroup.it",
-  ]
-}
-*/
 
 resource "google_cloud_run_service_iam_member" "frontend_invoker_user1" {
   service  = "frontend-service"
@@ -43,4 +87,53 @@ resource "google_cloud_run_service_iam_member" "frontend_invoker_user2" {
   location = "europe-west1"
   role     = "roles/run.invoker"
   member   = "user:danila.meleleo@fidogroup.it"
+}
+
+// risorse per variabili
+resource "google_secret_manager_secret" "vite_api_base_url" {
+  secret_id = "VITE_API_BASE_URL"
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_version" "vite_api_base_url_version" {
+  secret      = google_secret_manager_secret.vite_api_base_url.id
+  secret_data_wo = var.vite_api_base_url
+}
+
+resource "google_secret_manager_secret" "firebase_api_key" {
+  secret_id = "firebase-api-key"
+  replication { 
+    auto {} 
+  }
+}
+
+resource "google_secret_manager_secret_version" "firebase_api_key" {
+  secret      = google_secret_manager_secret.firebase_api_key.id
+  secret_data_wo = var.firebase_api_key
+}
+
+resource "google_secret_manager_secret" "firebase_messaging_sender_id" {
+  secret_id = "firebase-messaging-sender-id"
+  replication { 
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_version" "firebase_messaging_sender_id" {
+  secret      = google_secret_manager_secret.firebase_messaging_sender_id.id
+  secret_data_wo = var.firebase_messaging_sender_id
+}
+
+resource "google_secret_manager_secret" "firebase_app_id" {
+  secret_id = "firebase-app-id"
+  replication { 
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret_version" "firebase_app_id" {
+  secret      = google_secret_manager_secret.firebase_app_id.id
+  secret_data_wo = var.firebase_app_id
 }
