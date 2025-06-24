@@ -296,3 +296,11 @@ Adesso per far buildare i server non serve fare il doppio passaggio di prima, pe
 - ho implementato i google secrets per alcune key sensibili, da passare a dani il file secret_variables.tfvar non versionato
 - ho aggiunto lo "switch" tra modalità locale e GCP nella rotta anonymize.py, necessaria per disinguire lo sviluppo locale con GCP. Quindi bisogna ricordarsi di modificare quella variabile quando si cambia modalità
 - non c'è più bisogno di commentare/scommentare la riga BASE_URL nell'HomePage.jsx  perchè adesso lo switch tra locale e GCP è fatto in maniera automatica
+
+24/06/25 - troubleshooting
+- purtroppo l'errore Access to fetch at 'https://backend-gateway-7g2ufv92.ew.gateway.dev/anonymize' from origin 'http://localhost:8080' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.Understand this error non vuole proprio andare via
+- ho provato a modificare l'openapi.yaml, ad aggiungere/togliere le options e al momento ho lasciato nle main due metodi per cercare di ignorare le options durante l'autorizzazione, ma nulla
+- il backend viene chiamato perchè questo comando TOKEN=$(gcloud auth print-identity-token) curl -v -H "Authorization: Bearer $TOKEN" https://backend-service-583549727222.europe-west1.run.app/anonymize funziona.
+- quindi credo che il test con curl su GET funziona perché: non c’è preflight CORS (curl non lo fa) e la chiamata va direttamente al backend con token, mentre il browser prima fa la OPTIONS preflight senza token e se OPTIONS fallisce, la POST non parte
+
+

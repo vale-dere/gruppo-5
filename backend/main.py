@@ -26,6 +26,7 @@ app.add_middleware(
     "http://localhost:3000",         # sviluppo: React puro
     "http://localhost:5173",         # sviluppo: Vite dev server
     "https://frontend-service-hclc243hba-ew.a.run.app",  # produzione
+    "https://backend-gateway-7g2ufv92.ew.gateway.dev"   # produzione: gateway
     ],
     allow_credentials=True,
     allow_methods=["*"],

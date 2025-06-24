@@ -7,7 +7,7 @@ import numpy as np
 import json
 import os
 import uuid
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Response
 from auth.firebase_auth import verify_token
 from storage.storage import upload_blob
 from google.cloud import storage
@@ -22,9 +22,12 @@ from config.keywords import IDENTIFIER_KEYWORDS, SENSITIVE_KEYWORDS, QUASI_IDENT
 
 router = APIRouter()
 
-USE_GCS = False  # Imposta a True se vuoi usare Google Cloud Storage, altrimenti False per il locale
+USE_GCS = True  # Imposta a True se vuoi usare Google Cloud Storage, altrimenti False per il locale
 GCS_BUCKET_NAME = "gruppo5-datasets"  # Nome del bucket GCS
 
+@router.options("/anonymize")
+async def options_anonymize():
+    return Response(status_code=204)
 
 @router.get("/protected")
 async def protected_route(user_data=Depends(verify_token)):

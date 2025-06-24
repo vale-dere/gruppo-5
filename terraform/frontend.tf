@@ -4,8 +4,10 @@ resource "google_cloud_run_service" "frontend_service" {
 
   template {
     spec {
+      service_account_name = google_service_account.frontend_sa.email
+
       containers {
-        image = "europe-west1-docker.pkg.dev/gruppo-5/anonimadata-repo/frontend:v20250623-1324"
+        image = "europe-west1-docker.pkg.dev/gruppo-5/anonimadata-repo/frontend:v20250623-2018"
 
         ports {
           container_port = 8080
@@ -88,6 +90,13 @@ resource "google_cloud_run_service_iam_member" "frontend_invoker_user2" {
   role     = "roles/run.invoker"
   member   = "user:danila.meleleo@fidogroup.it"
 }
+
+// service account utilizzato per aggirare servizio privato
+resource "google_service_account" "frontend_sa" {
+  account_id   = "frontend-sa"
+  display_name = "Service Account per il Frontend Cloud Run"
+}
+
 
 // risorse per variabili
 resource "google_secret_manager_secret" "vite_api_base_url" {

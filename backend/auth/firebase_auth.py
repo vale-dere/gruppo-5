@@ -39,6 +39,8 @@ if not firebase_admin._apps:
 
 # Dependency to verify Firebase token in Authorization header
 async def verify_token(request: Request):
+    if request.method == "OPTIONS":
+        return  # skip auth per preflight
     auth_header = request.headers.get("Authorization")
     if not auth_header or not auth_header.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Missing or invalid Authorization Header")

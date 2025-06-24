@@ -5,7 +5,7 @@ resource "google_cloud_run_service" "backend_service" {
   template {
     spec {
       containers {
-        image = "europe-west1-docker.pkg.dev/gruppo-5/anonimadata-repo/backend:v20250623-1320"
+        image = "europe-west1-docker.pkg.dev/gruppo-5/anonimadata-repo/backend:v20250624-2021"
         ports {
           container_port = 8080
         }
@@ -20,18 +20,13 @@ resource "google_cloud_run_service" "backend_service" {
   }
 }
 
-/*
-# IAM binding per permettere a utenti specifici di invocare backend
-resource "google_cloud_run_service_iam_binding" "backend_invokers" {
-  service  = google_cloud_run_service.backend_service.name
-  location = google_cloud_run_service.backend_service.location
-  role     = "roles/run.invoker"
-  members = [
-    "user:valentina.derespinis@fidogroup.it",
-    "user:danila.meleleo@fidogroup.it",
-  ]
+resource "google_cloud_run_service_iam_member" "gateway_invoker" {
+  project        = "gruppo-5"
+  location       = "europe-west1"
+  service        = "backend-service"
+  role           = "roles/run.invoker"
+  member         = "serviceAccount:service-583549727222@gcp-sa-apigateway.iam.gserviceaccount.com"
 }
-*/
 
 # Backend IAM members
 resource "google_cloud_run_service_iam_member" "backend_invoker_user1" {
