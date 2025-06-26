@@ -15,22 +15,15 @@ origins = [
     "http://localhost:3000",         # sviluppo: React puro
     "http://localhost:5173",         # sviluppo: Vite dev server
     "https://frontend-service-hclc243hba-ew.a.run.app",  # produzione
+    "https://backend-gateway-7g2ufv92.ew.gateway.dev"   # produzione: gateway
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-    "http://localhost:8080",         # sviluppo: proxy cloudrun
-    "http://127.0.0.1:8080",         # sviluppo: proxy cloudrun
-    "http://localhost:8081",         # sviluppo: proxy React/Vite
-    "http://localhost:3000",         # sviluppo: React puro
-    "http://localhost:5173",         # sviluppo: Vite dev server
-    "https://frontend-service-hclc243hba-ew.a.run.app",  # produzione
-    "https://backend-gateway-7g2ufv92.ew.gateway.dev"   # produzione: gateway
-    ],
+    allow_origins= origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"],
+    allow_headers=["Access-Control-Allow-Headers", "Access-Control-Allow-Origin", "Origin,Accept", "X-Requested-With", "Content-Type", "Access-Control-Request-Method", "Access-Control-Request-Headers", "Authorization"],
 )
 ''' gestione richieste OPTIONS per CORS
 @app.middleware("http")

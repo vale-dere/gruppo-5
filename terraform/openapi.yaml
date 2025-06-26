@@ -3,6 +3,7 @@ info:
   title: Backend API
   version: 1.0.0
 
+host: backend-gateway-7g2ufv92.ew.gateway.dev
 schemes:
   - https
 
@@ -17,26 +18,36 @@ paths:
           description: CORS preflight support
           headers:
             Access-Control-Allow-Origin:
+              description: "CORS origin"
               type: string
               default: "http://localhost:8080"
             Access-Control-Allow-Methods:
+              description: "Allowed methods"
               type: string
               default: "POST, OPTIONS"
             Access-Control-Allow-Headers:
+              description: "Allowed headers"
               type: string
               default: "Authorization, Content-Type"
+            Access-Control-Allow-Credentials:
+              description: "Allow credentials"
+              type: string
+              default: "true"
+      x-google-extensions:
+        x-google-cors: true
+
     post:
       summary: Anonimizza dati
       operationId: anonymizeData
       x-google-backend:
         address: https://backend-service-583549727222.europe-west1.run.app
         protocol: h2
+        jwt_audience: https://backend-service-583549727222.europe-west1.run.app
       security:
         - firebase: []
       responses:
         '200':
           description: Success
-
 
 securityDefinitions:
   firebase:
@@ -44,9 +55,12 @@ securityDefinitions:
     flow: "implicit"
     type: "oauth2"
     x-google-issuer: "https://securetoken.google.com/gruppo-5"
-    #x-google-jwks_uri: "https://www.googleapis.com/oauth2/v3/certs"
-    x-google-jwks_uri: "https://www.googleapis.com/robot/v1/metadata/x509/gateway-sa@gruppo-5.iam.gserviceaccount.com"
+    x-google-jwks_uri: "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com"
     x-google-audiences: "gruppo-5"
-    x-google-endpoints:
-      - name: backend-gateway-7g2ufv92.ew.gateway.dev
-        allowCors: true
+
+security:
+  - firebase: []
+
+x-google-endpoints:
+  - name: backend-gateway-7g2ufv92.ew.gateway.dev
+    allowCors: true

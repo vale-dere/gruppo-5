@@ -25,10 +25,6 @@ router = APIRouter()
 USE_GCS = True  # Imposta a True se vuoi usare Google Cloud Storage, altrimenti False per il locale
 GCS_BUCKET_NAME = "gruppo5-datasets"  # Nome del bucket GCS
 
-@router.options("/anonymize")
-async def options_anonymize():
-    return Response(status_code=204)
-
 @router.get("/protected")
 async def protected_route(user_data=Depends(verify_token)):
     return {"message": "Accesso autorizzato!", "user_id": user_data['uid']}
