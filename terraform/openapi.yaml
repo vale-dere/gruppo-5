@@ -10,32 +10,22 @@ schemes:
 paths:
   /anonymize:
     options:
-      summary: CORS support
+      summary: CORS pre-flight
       operationId: corsAnonymize
-      security: []
+      security: []                  # niente JWT sul pre-flight
       responses:
         '204':
-          description: CORS preflight support
+          description: Ok
           headers:
             Access-Control-Allow-Origin:
-              description: "CORS origin"
               type: string
-              default: "http://localhost:8080"
+              default: http://localhost:8080
             Access-Control-Allow-Methods:
-              description: "Allowed methods"
               type: string
               default: "POST, OPTIONS"
             Access-Control-Allow-Headers:
-              description: "Allowed headers"
               type: string
               default: "Authorization, Content-Type"
-            Access-Control-Allow-Credentials:
-              description: "Allow credentials"
-              type: string
-              default: "true"
-      x-google-extensions:
-        x-google-cors: true
-
     post:
       summary: Anonimizza dati
       operationId: anonymizeData
@@ -63,4 +53,3 @@ security:
 
 x-google-endpoints:
   - name: backend-gateway-7g2ufv92.ew.gateway.dev
-    allowCors: true

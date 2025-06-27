@@ -7,7 +7,7 @@ resource "google_cloud_run_service" "frontend_service" {
       service_account_name = google_service_account.frontend_sa.email
 
       containers {
-        image = "europe-west1-docker.pkg.dev/gruppo-5/anonimadata-repo/frontend:v20250626-2259"
+        image = "europe-west1-docker.pkg.dev/gruppo-5/anonimadata-repo/frontend:v20250627-1620"
 
         ports {
           container_port = 8080

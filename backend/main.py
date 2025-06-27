@@ -8,6 +8,9 @@ import logging
 app = FastAPI()  # creates a server
 logger = logging.getLogger("uvicorn")
 
+logger.setLevel(logging.INFO)  # set log level to INFO
+logger.info("Starting FastAPI application...")
+
 origins = [
     "http://localhost:8080",         # sviluppo: proxy cloudrun
     "http://127.0.0.1:8080",         # sviluppo: proxy cloudrun
@@ -23,8 +26,9 @@ app.add_middleware(
     allow_origins= origins,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"],
-    allow_headers=["Access-Control-Allow-Headers", "Access-Control-Allow-Origin", "Origin,Accept", "X-Requested-With", "Content-Type", "Access-Control-Request-Method", "Access-Control-Request-Headers", "Authorization"],
+    allow_headers=["Access-Control-Allow-Headers", "Access-Control-Allow-Origin", "Origin", "Accept", "X-Requested-With", "Content-Type", "Access-Control-Request-Method", "Access-Control-Request-Headers", "Authorization", "authorization"],
 )
+
 ''' gestione richieste OPTIONS per CORS
 @app.middleware("http")
 async def options_middleware(request: Request, call_next):
