@@ -1,3 +1,4 @@
+/*
 resource "google_service_account" "gateway_sa" {
   account_id   = "gateway-sa"
   display_name = "Service Account for API Gateway to invoke Cloud Run"
@@ -39,3 +40,4 @@ resource "google_api_gateway_gateway" "gateway_instance" {
   api_config = google_api_gateway_api_config.gateway_config.id
   region = "europe-west1"
 }
+*/

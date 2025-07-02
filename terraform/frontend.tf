@@ -7,7 +7,7 @@ resource "google_cloud_run_service" "frontend_service" {
       service_account_name = google_service_account.frontend_sa.email
 
       containers {
-        image = "europe-west1-docker.pkg.dev/gruppo-5/anonimadata-repo/frontend:v20250627-1620"
+        image = "europe-west1-docker.pkg.dev/gruppo-5/anonimadata-repo/frontend:v20250702-2000"
 
         ports {
           container_port = 8080
@@ -68,6 +68,12 @@ resource "google_cloud_run_service" "frontend_service" {
           }
         }
       }
+      /* gestita via console a causa dell'incompatibilità con la v1 della risorsa cloudrun
+      vpc_access {
+        connector = "projects/gruppo-5/locations/europe-west1/connectors/cloud-run-connector"
+        egress    = "all"  # o "private-ranges-only" se vuoi
+      }
+      */
     }
   }
 

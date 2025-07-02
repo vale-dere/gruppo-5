@@ -303,4 +303,9 @@ Adesso per far buildare i server non serve fare il doppio passaggio di prima, pe
 - il backend viene chiamato perchè questo comando TOKEN=$(gcloud auth print-identity-token) curl -v -H "Authorization: Bearer $TOKEN" https://backend-service-583549727222.europe-west1.run.app/anonymize funziona.
 - quindi credo che il test con curl su GET funziona perché: non c’è preflight CORS (curl non lo fa) e la chiamata va direttamente al backend con token, mentre il browser prima fa la OPTIONS preflight senza token e se OPTIONS fallisce, la POST non parte
 
+02/07/25 - vpc
+- implementata la vpc e riceviamo comunque lo stesso errore
+- per tentativo ho provato anche a settare l'ingress del backend=all e aggiugnergi la vcp-access egress=all anche se in teoria al be non serve.
+- credo che il problema stia nel fatto che il be si aspetta sia un token firebase che un token google essendo privato. 
+- anche un proxy node.js non risolverebbe la situazioni molto probabilmente
 
