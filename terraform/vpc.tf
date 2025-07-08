@@ -1,7 +1,7 @@
 module "vpc-module" {
   source       = "terraform-google-modules/network/google"
   version      = "~> 10.0"
-  project_id   = "gruppo-5" 
+  project_id   = var.project_id 
   network_name = "anonimadata-vpc-network"
   mtu          = 1460
 
@@ -9,7 +9,7 @@ module "vpc-module" {
     {
       subnet_name           = "private-subnet-01"
       subnet_ip             = "10.0.1.0/24"
-      subnet_region         = "europe-west1"
+      subnet_region         = var.region
       subnet_private_access = true  # permette ai VM e servizi nella subnet di accedere a servizi Google privati (senza internet)
       subnet_flow_logs      = false # disabilitato, puoi abilitare se vuoi
     }
@@ -18,7 +18,7 @@ module "vpc-module" {
 
 resource "google_vpc_access_connector" "cloud_run_connector" {
   name   = "cloud-run-connector"
-  region = "europe-west1"
+  region = var.region
   network = module.vpc-module.network_name
   ip_cidr_range = "10.8.0.0/28" # range IP per il connettore VPC (non deve sovrapporsi con subnet)
   min_instances = 2
@@ -33,10 +33,6 @@ resource "google_compute_firewall" "rules" {
 
   allow {
     protocol = "all" #se funziona aumentiamo granularità
-    /*
-    protocol = "tcp"
-    ports    = ["80", "443"]
-    */
   }
 
   source_ranges = ["10.0.1.0/24"]

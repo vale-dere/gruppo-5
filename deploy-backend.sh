@@ -14,9 +14,9 @@ docker build -t $IMAGE ./backend
 echo "Pushing backend image..."
 docker push $IMAGE
 
-echo "Updating backend.tf image tag..."
-# Aggiorna il file terraform backend.tf nella cartella terraform
-sed -i.bak "s|image = \".*\"|image = \"$IMAGE\"|" ./terraform/backend.tf
+echo "Updating terraform.tfvars with new image tag..."
+# Aggiorna terraform.tfvars invece di backend.tf
+sed -i.bak "s|^backend_image *= *\".*\"|backend_image = \"$IMAGE\"|" ./terraform/terraform.tfvars
 
 echo "Running terraform apply for backend..."
 cd terraform

@@ -7,11 +7,9 @@ import WhiteBox from './WhiteBox';
 import FileUpload from './FileUpload';
 import AlgorithmSelector from './AlgorithmSelector';
 import { useNavigate } from 'react-router-dom';
-import { getAuth, signOut, getIdToken } from "firebase/auth"; // Importa Firebase Auth
+import { getAuth, signOut, getIdToken } from "firebase/auth";
 
-function HomePage() {
-  //console.log("HomePage rendered");
-  
+function HomePage() {  
   const navigate = useNavigate(); 
   const auth = getAuth();
  
@@ -22,6 +20,7 @@ function HomePage() {
   const [previewData, setPreviewData] = useState([]);   
   const [loading, setLoading] = useState(false);
   const [downloadUrl, setDownloadUrl] = useState(null);
+  const [downloadFileId, setDownloadFileId] = useState(null); // per il download del file completo
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadMessage, setDownloadMessage] = useState("");
 
@@ -49,31 +48,6 @@ function HomePage() {
     setParameterValue(e.target.value);
   };
 
-  /* commento momentaneo. capire se meglio questo o codice nuovo (vedi subito dopo)
-  // Funzione per chiamare il backend
-  const handleAnonymize = async () => {
-    if (!selectedFile || !selectedAlgorithm) return;
-    setLoading(true);
-    const form = new FormData();
-    form.append('file', selectedFile);
-// passa il parametro dinamico (nome “k” o “epsilon” a seconda dell’algoritmo)
-    const paramName = selectedAlgorithm === 'differential-privacy' ? 'epsilon' : 'k';
-    form.append(paramName, parameterValue); 
-    try {
-      const res = await fetch('http://localhost:8080/anonymize', {
-        method: 'POST',
-        body: form
-      });
-      const json = await res.json();
-      setPreviewData(json.preview || []);
-    } catch (err) {
-      console.error(err);
-      alert('Errore durante l’anonymization');
-    } finally {
-      setLoading(false);
-    }
-  };
-  */
   const handleAnonymize = async () => {
     console.log("Sending anonymization request", selectedFile, selectedAlgorithm, parameterValue); //debug purposes
 
@@ -89,7 +63,7 @@ function HomePage() {
     }
 
     const cleanParameter = String(parameterValue).replace(',', '.');
-    if (isNaN(cleanParameter)) {
+    if (isNaN(Number(cleanParameter))) {
       alert("Il parametro deve essere un numero valido (es. 0.1 o 3)");
       return;
     }
@@ -140,6 +114,8 @@ function HomePage() {
     const json = JSON.parse(text);
     setPreviewData(json.preview || []);
     setDownloadUrl(json.download_url);
+    setDownloadFileId(json.download_file_id); // <--- salva il file_id
+    console.log("(FE) Download URL:", json.download_url); // debug purposes
     } catch (err) {
       console.error("Errore di rete:", err);
       alert("Errore durante l’anonimizzazione. Errore di rete: " + err.message);
@@ -153,6 +129,11 @@ function HomePage() {
     if (!downloadUrl) {
       alert("Nessun file da scaricare. Anonimizza prima il dataset.");
       return;
+    }
+
+    if (!downloadFileId) {
+    alert("Nessun file da scaricare. Anonimizza prima il dataset.");
+    return;
     }
     
     setIsDownloading(true);
@@ -168,7 +149,10 @@ function HomePage() {
       }
       const token = await getIdToken(user, true);
 
-      const res = await fetch(downloadUrl, {
+      const BASE_URL = import.meta.env.VITE_API_BASE_URL; 
+      console.log("Base URL:", BASE_URL); // debug purposes
+      console.log("Download fileId:", downloadFileId);
+      const res = await fetch(`${BASE_URL}/download/${downloadFileId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -253,7 +237,7 @@ function HomePage() {
           <button
             type="button"
             className="anonymize-button"
-            disabled={!selectedFile || !selectedAlgorithm || !parameterValue}
+            disabled={!selectedFile || !selectedAlgorithm || !parameterValue || !parameterValue.trim()}
             onClick={handleAnonymize}
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="2"

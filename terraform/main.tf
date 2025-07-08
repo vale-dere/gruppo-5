@@ -11,17 +11,15 @@ terraform {
       version = ">= 6.0.0"
     }
   }
-}
-
-// da valutare creazione file providers 
+} 
 
 provider "google" { 
-  project = "gruppo-5" 
-  region  = "europe-west1"
+  project = var.project_id 
+  region  = var.region
 }
 
 provider "google-beta" {
-  project = "gruppo-5"
-  region  = "europe-west1"
+  project = var.project_id
+  region  = var.region
 }
 

@@ -1,5 +1,5 @@
 #what the server does when someone sends a POST to the /anonymize path
-from fastapi import APIRouter, UploadFile, File, Form, HTTPException
+from fastapi import APIRouter, UploadFile, File, Form, HTTPException, Depends, Response
 from fastapi.responses import FileResponse
 import pandas as pd
 from io import BytesIO
@@ -7,12 +7,13 @@ import numpy as np
 import json
 import os
 import uuid
-from fastapi import APIRouter, Depends, File, Form, HTTPException, Response
 from auth.firebase_auth import verify_token
-from storage.storage import upload_blob
-from google.cloud import storage
+import google.auth
+from google.auth.transport.requests import Request
 import datetime
 from datetime import timedelta
+from storage.storage import upload_blob
+from google.cloud import storage
 
 from algorithms.k_anonymity import apply_k_anonymity
 from algorithms.l_diversity import apply_l_diversity
@@ -22,8 +23,9 @@ from config.keywords import IDENTIFIER_KEYWORDS, SENSITIVE_KEYWORDS, QUASI_IDENT
 
 router = APIRouter()
 
-USE_GCS = True  # Imposta a True se vuoi usare Google Cloud Storage, altrimenti False per il locale
-GCS_BUCKET_NAME = "gruppo5-datasets"  # Nome del bucket GCS
+USE_GCS = True  # True --> Google Cloud Storage, False ---> local
+GCS_BUCKET_NAME = "gruppo5-datasets"  # bucket GCS
+GCS_FOLDER = "anonymized"  
 
 @router.get("/protected")
 async def protected_route(user_data=Depends(verify_token)):
@@ -229,12 +231,30 @@ async def anonymize(
             # Upload su Cloud Storage
             client = storage.Client()
             bucket = client.bucket(GCS_BUCKET_NAME)
-            blob = bucket.blob(f"anonymized/{filename}")
+            blob = bucket.blob(f"{GCS_FOLDER}/{filename}")
             blob.upload_from_file(output_buffer, content_type="text/csv")
 
-            # Genera URL firmato valido per 15 minuti
-            expiration = datetime.timedelta(minutes=15)
-            download_url = blob.generate_signed_url(expiration=expiration)
+            # Ottieni credenziali e token da ADC (es. Cloud Run)
+            credentials, project_id = google.auth.default()
+            credentials.refresh(Request())  # Assicura che il token sia valido
+
+            # Verifica che le credenziali contengano service_account_email e token
+            service_account_email = getattr(credentials, "service_account_email", None)
+            access_token = getattr(credentials, "token", None)
+
+            if service_account_email and access_token:
+                # Genera signed URL v4 valido per 15 minuti (inline = anteprima)
+                expiration = datetime.timedelta(minutes=15)
+                download_url = blob.generate_signed_url(
+                    version="v4",
+                    expiration=expiration,
+                    method="GET",
+                    response_disposition="inline",
+                    service_account_email=service_account_email,
+                    access_token=access_token,
+                )
+            else:
+                raise ValueError("Credenziali non valide per la generazione del signed URL.")
 
             print(f"File caricato su GCS: gs://{GCS_BUCKET_NAME}/anonymized/{filename}")
             print(f"URL di download temporaneo: {download_url}")
@@ -255,12 +275,38 @@ async def anonymize(
     return {
     "preview": preview,
     "data": result_clean.to_dict(orient="records"),  # Manda anche il dataset completo per salvarlo dopo
-    "download_url": download_url
+    "download_url": download_url,
+    "download_file_id": file_id  # ID del file per il download
 }
 
 @router.get("/download/{file_id}")
 async def download_anonymized_file(file_id: str, user_data=Depends(verify_token)):
-    file_path = os.path.join(OUTPUT_DIR, f"{file_id}.csv")
-    if not os.path.exists(file_path):
-        raise HTTPException(status_code=404, detail="File non trovato.")
-    return FileResponse(path=file_path, filename=f"{file_id}.csv", media_type='text/csv')
+    try:
+        # Costruisci il nome del file
+        filename = f"{file_id}.csv"
+        blob_path = os.path.join(GCS_FOLDER, filename).replace("\\", "/") #cross-platform compatibilità
+
+        # Inizializza il client GCS
+        client = storage.Client()
+        bucket = client.bucket(GCS_BUCKET_NAME)
+        blob = bucket.blob(blob_path)
+
+        # Verifica che il file esista su GCS
+        if not blob.exists():
+            raise HTTPException(status_code=404, detail="File non trovato su GCS.")
+
+        # Scarica il file come bytes
+        file_bytes = blob.download_as_bytes()
+
+        # Restituisci il contenuto come FileResponse (CORS-safe)
+        return Response(
+            content=file_bytes,
+            media_type="text/csv",
+            headers={
+                "Content-Disposition": f'inline; filename="{filename}"'
+            }
+        )
+
+    except Exception as e:
+        print(f"Errore durante il download del file da GCS: {e}")
+        raise HTTPException(status_code=500, detail="Errore durante il download del file.")

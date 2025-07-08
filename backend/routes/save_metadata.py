@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from google.cloud import firestore
-from firestore.firestore_client import get_firestore_client  # suppongo che hai questa funzione
-from auth.firebase_auth import verify_token  # importa il tuo verify_token
+from firestore.firestore_client import get_firestore_client  
+from auth.firebase_auth import verify_token  
 import logging
 
 router = APIRouter()
@@ -16,7 +16,7 @@ class DatasetMetadata(BaseModel):
 @router.post("/save-metadata")
 async def save_metadata(
     data: DatasetMetadata,
-    decoded_token=Depends(verify_token)  # usa la tua dipendenza per validare il token
+    decoded_token=Depends(verify_token)  
 ):
     client = get_firestore_client()
     try:

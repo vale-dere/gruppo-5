@@ -4,7 +4,7 @@ resource "google_project_service" "firestore" {
 
 resource "google_firestore_database" "default" {
   name        = "(default)"
-  project     = "gruppo-5"
-  location_id = "europe-west1"
+  project     = var.project_id
+  location_id = var.region
   type        = "FIRESTORE_NATIVE"
 }

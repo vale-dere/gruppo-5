@@ -7,7 +7,7 @@ resource "google_cloud_run_service" "frontend_service" {
       service_account_name = google_service_account.frontend_sa.email
 
       containers {
-        image = "europe-west1-docker.pkg.dev/gruppo-5/anonimadata-repo/frontend:v20250702-1926"
+        image = "europe-west1-docker.pkg.dev/gruppo-5/anonimadata-repo/frontend:v20250707-2022"
 
         ports {
           container_port = 8080
@@ -82,7 +82,7 @@ resource "google_cloud_run_service" "frontend_service" {
     latest_revision = true
   }
 }
-
+/*
 resource "google_cloud_run_service_iam_member" "frontend_invoker_user1" {
   service  = "frontend-service"
   location = "europe-west1"
@@ -96,7 +96,7 @@ resource "google_cloud_run_service_iam_member" "frontend_invoker_user2" {
   role     = "roles/run.invoker"
   member   = "user:danila.meleleo@fidogroup.it"
 }
-
+*/
 // service account utilizzato per aggirare servizio privato
 resource "google_service_account" "frontend_sa" {
   account_id   = "frontend-sa"

@@ -5,7 +5,7 @@ resource "google_cloud_run_service" "backend_service" {
   template {
     spec {
       containers {
-        image = "europe-west1-docker.pkg.dev/gruppo-5/anonimadata-repo/backend:v20250702-1917"
+        image = "europe-west1-docker.pkg.dev/gruppo-5/anonimadata-repo/backend:v20250707-2015"
         ports {
           container_port = 8080
         }
@@ -21,7 +21,7 @@ resource "google_cloud_run_service" "backend_service" {
     latest_revision = true
   }
 }
-
+/*
 resource "google_cloud_run_service_iam_member" "gateway_invoker" {
   project        = "gruppo-5"
   location       = "europe-west1"
@@ -52,7 +52,7 @@ resource "google_cloud_run_service_iam_member" "backend_invoker_sa_fe" {
   role        = "roles/run.invoker"
   member      = "serviceAccount:${google_service_account.frontend_sa.email}"
 }
-
+*/
 # Backend service account (principalmente per chiave json firebase)
 resource "google_service_account" "backend_sa" {
   account_id   = "backend-sa"

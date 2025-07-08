@@ -12,13 +12,11 @@ logger.setLevel(logging.INFO)  # set log level to INFO
 logger.info("Starting FastAPI application...")
 
 origins = [
-    "http://localhost:8080",         # sviluppo: proxy cloudrun
-    "http://127.0.0.1:8080",         # sviluppo: proxy cloudrun
     "http://localhost:8081",         # sviluppo: proxy React/Vite
     "http://localhost:3000",         # sviluppo: React puro
     "http://localhost:5173",         # sviluppo: Vite dev server
-    "https://frontend-service-hclc243hba-ew.a.run.app",  # produzione
-    "https://backend-gateway-7g2ufv92.ew.gateway.dev"   # produzione: gateway
+    "https://frontend-service-hclc243hba-ew.a.run.app",  # produzione: frontend
+    "https://frontend-service-583549727222.europe-west1.run.app", # produzione: frontend
 ]
 
 app.add_middleware(
@@ -29,23 +27,7 @@ app.add_middleware(
     allow_headers=["Access-Control-Allow-Headers", "Access-Control-Allow-Origin", "Origin", "Accept", "X-Requested-With", "Content-Type", "Access-Control-Request-Method", "Access-Control-Request-Headers", "Authorization", "authorization"],
 )
 
-''' gestione richieste OPTIONS per CORS
-@app.middleware("http")
-async def options_middleware(request: Request, call_next):
-    if request.method == "OPTIONS":
-        origin = request.headers.get("origin", "*")
-        req_headers = request.headers.get("access-control-request-headers", "")
-        headers = {
-            "Access-Control-Allow-Origin": origin,
-            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-            "Access-Control-Allow-Headers": req_headers,
-            "Access-Control-Allow-Credentials": "true"
-        }
-        return Response(status_code=200, headers=headers)
-    return await call_next(request)
-'''
 app.include_router(anonymize.router)
-
 app.include_router(save_metadata.router)
 
 @app.get("/test-cors")

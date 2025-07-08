@@ -1,13 +1,13 @@
 resource "google_cloud_run_service" "frontend_service" {
-  name     = "frontend-service"
-  location = "europe-west1"
+  name     = var.frontend_service_name
+  location = var.region
 
   template {
     spec {
       service_account_name = google_service_account.frontend_sa.email
 
       containers {
-        image = "europe-west1-docker.pkg.dev/gruppo-5/anonimadata-repo/frontend:v20250702-2000"
+        image = var.frontend_image
 
         ports {
           container_port = 8080
@@ -68,12 +68,6 @@ resource "google_cloud_run_service" "frontend_service" {
           }
         }
       }
-      /* gestita via console a causa dell'incompatibilità con la v1 della risorsa cloudrun
-      vpc_access {
-        connector = "projects/gruppo-5/locations/europe-west1/connectors/cloud-run-connector"
-        egress    = "all"  # o "private-ranges-only" se vuoi
-      }
-      */
     }
   }
 
@@ -83,23 +77,8 @@ resource "google_cloud_run_service" "frontend_service" {
   }
 }
 
-resource "google_cloud_run_service_iam_member" "frontend_invoker_user1" {
-  service  = "frontend-service"
-  location = "europe-west1"
-  role     = "roles/run.invoker"
-  member   = "user:valentina.derespinis@fidogroup.it"
-}
-
-resource "google_cloud_run_service_iam_member" "frontend_invoker_user2" {
-  service  = "frontend-service"
-  location = "europe-west1"
-  role     = "roles/run.invoker"
-  member   = "user:danila.meleleo@fidogroup.it"
-}
-
-// service account utilizzato per aggirare servizio privato
 resource "google_service_account" "frontend_sa" {
-  account_id   = "frontend-sa"
+  account_id   = var.frontend_sa_account_id
   display_name = "Service Account per il Frontend Cloud Run"
 }
 

@@ -15,10 +15,9 @@ echo "Pushing image..."
 # Push dell'immagine sul Container Registry Artifact Registry
 docker push $IMAGE
 
-echo "Updating Terraform file..."
-# # Aggiorna il file terraform frontend.tf nella cartella terraform sostituendo la riga con image = "...", 
-# facendo attenzione che la sintassi nel .tf corrisponda a questa espressione
-sed -i.bak "s|image = \".*\"|image = \"$IMAGE\"|" ./terraform/frontend.tf
+echo "Updating terraform.tfvars with new image tag..."
+# Aggiorna terraform.tfvars invece di backend.tf
+sed -i.bak "s|^frontend_image *= *\".*\"|frontend_image = \"$IMAGE\"|" ./terraform/terraform.tfvars
 
 echo "Running terraform apply for frontend..."
 cd terraform

@@ -309,3 +309,7 @@ Adesso per far buildare i server non serve fare il doppio passaggio di prima, pe
 - credo che il problema stia nel fatto che il be si aspetta sia un token firebase che un token google essendo privato. 
 - anche un proxy node.js non risolverebbe la situazioni molto probabilmente
 
+07/07/25 - war is over
+- ho disabilitato tutte le policy iam, quindi adesso sia il be che il fe sono pubblici e infatti sono accessibili da browser senza usare il proxy
+- sistemate anche le infrastrutture cloud storage e il download, che adesso funzionano correttamente
+
