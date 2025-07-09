@@ -1,7 +1,7 @@
 import pandas as pd
 from dateutil.parser import parse
 
-# Funzione centrale per pulizia valori
+# Central function for value cleaning
 def clean_value(val):
     if pd.isnull(val):
         return None
@@ -50,25 +50,25 @@ def build_age_hierarchy(values):
     for age in values:
         current = str(age)
 
-        # Livello 1 – blocchi di 5 anni
+        # Lvl 1 – 5-year blocks
         b5_low = (age // 5) * 5
         b5_high = b5_low + 4
         l1 = f"{b5_low}-{b5_high}"
         hierarchy[current] = l1
 
-        # Livello 2 – blocchi di 10 anni
+        # Lvl 2 – 10-year blocks
         b10_low = (age // 10) * 10
         b10_high = b10_low + 9
         l2 = f"{b10_low}-{b10_high}"
         hierarchy[l1] = l2
 
-        # Livello 3 – blocchi di 20 anni
+        # Lvl 3 – 20-year blocks
         b20_low = (age // 20) * 20
         b20_high = b20_low + 19
         l3 = f"{b20_low}-{b20_high}"
         hierarchy[l2] = l3
 
-         # Livello 4 – blocchi 0-39, 40-79, 80+
+        # Lvl 4 – 0-39, 40-79, 80+
         if age <= 39:
             l4 = "0-39"
         elif age <= 79:
@@ -77,7 +77,7 @@ def build_age_hierarchy(values):
             l4 = "80+"
         hierarchy[l3] = l4
 
-        # Livello 5 – massimo livello
+        # Lvl 5 – max level
         hierarchy[l4] = "*"
 
 
@@ -116,11 +116,10 @@ def build_zipcode_hierarchy(values):
             hierarchy[code] = code[:4] + "*"
             hierarchy[code[:4] + "*"] = code[:3] + "**"
             hierarchy[code[:3] + "**"] = "*"
-            #hierarchy[code[:3] + "**"] = code[:2] + "***" #eliminate perchè troppi livelli qui, facevano generalizzare troppo anche age, quindi meglio sacrificare solo zipcode e non entrambi (da scrivere nel report)
-            #hierarchy[code[:2] + "***"] = "*"
+            # Removed extra generalization level for zipcodes to avoid excessive generalization.
+            # hierarchy[code[:2] + "***"] = "*"
         else:
-            hierarchy[code] = "*" #equivalente di:
-            #hierarchy[code[:3] + "**"] = "1" + "***" quando confronti coi test che hai creato
+            hierarchy[code] = "*" 
     return hierarchy
 
 def build_categorical_hierarchy(values):
@@ -167,7 +166,7 @@ def build_date_hierarchy(values):
         hierarchy[century] = "*"
     return hierarchy
 
-# Builders generici
+# Generic builders
 def generic_numeric_builder(values):
     return build_numeric_hierarchy(values, step=100, max_depth=2)
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/App.css';  // Miglioriamo il CSS qui
+import '../styles/App.css';  // Improve CSS here
 
 export default function WhiteBox({ title, children }) {
   return (

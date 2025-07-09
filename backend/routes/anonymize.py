@@ -1,4 +1,3 @@
-#what the server does when someone sends a POST to the /anonymize path
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException, Depends, Response
 from fastapi.responses import FileResponse
 import pandas as pd
@@ -28,70 +27,44 @@ logger.setLevel(logging.INFO)
 
 router = APIRouter()
 
-
 USE_GCS = True  # True --> Google Cloud Storage, False ---> local
-GCS_BUCKET_NAME = "gruppo5-datasets"  # bucket GCS
-GCS_FOLDER = "anonymized"  
+GCS_BUCKET_NAME = "gruppo5-datasets"  # GCS bucket
+GCS_FOLDER = "anonymized"
 
-@router.get("/protected")
-async def protected_route(user_data=Depends(verify_token)):
-    return {"message": "Accesso autorizzato!", "user_id": user_data['uid']}
-
-# Creo cartella per salvare i file solo se si usa lo storage locale.
+# Create folder for saving files only if using local storage.
 OUTPUT_DIR = "generated_files"
 if not USE_GCS:
     os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 def sanitize_for_json(df):
-    # Sostituisci inf con NaN
+    # Replace inf with NaN
     df = df.replace([np.inf, -np.inf], np.nan)
-    # Sostituisci NaN con None
+    # Replace NaN with None
     df = df.where(pd.notnull(df), None)
-    # Converti tipi float in oggetti per evitare problemi di serializzazione JSON
+    # Convert float types to object to avoid JSON serialization issues
     for col in df.columns:
         if pd.api.types.is_float_dtype(df[col]):
             df[col] = df[col].astype(object)
     return df
-''' PER ORA LO LASCIO QUI IL CODICE, POI CAPIAMO SE IMPLEMENTARLO O MENO
-def fallback_quasi_identifiers(df: pd.DataFrame, top_n: int = 2) -> list[str]:
-    # Colonne non identifier e non sensitive, con più di una modalità e non tutte uniche
-    candidate_cols = [col for col in df.columns 
-                      if df[col].nunique() > 1 and df[col].nunique() < len(df) and not pd.api.types.is_float_dtype(df[col])]
-    # Se non ci sono candidate, torna vuoto
-    if not candidate_cols:
-        return []
 
-    # Ordina per entropia decrescente (simile a fallback_sensitive_attr)
-    entropies = {}
-    for col in candidate_cols:
-        counts = df[col].value_counts(normalize=True)
-        entropy = -np.sum(counts * np.log2(counts + 1e-9))
-        entropies[col] = entropy
-
-    sorted_cols = sorted(entropies.items(), key=lambda x: x[1], reverse=True)
-    selected = [col for col, _ in sorted_cols[:top_n]]
-    return selected
-'''
 def fallback_sensitive_attr(df: pd.DataFrame, quasi_identifiers: list[str], top_n: int = 1) -> list[str]:
-    """Se non si trova un attributo sensibile, sceglie come fallback il QI più variegato."""
+    """If no sensitive attribute is found, fallback to the most varied QI."""
     if not quasi_identifiers:
         return []
 
-    # Calcola l'entropia di ciascun quasi-identificatore
+    # Calculate entropy for each quasi-identifier
     entropies = {}
     for col in quasi_identifiers:
-        # Frequenza relativa delle modalità
         counts = df[col].value_counts(normalize=True)
-        entropy = -np.sum(counts * np.log2(counts + 1e-9))  # log2 con epsilon per evitare log(0)
+        entropy = -np.sum(counts * np.log2(counts + 1e-9))  # log2 with epsilon to avoid log(0)
         entropies[col] = entropy
 
-    # Ordina per entropia decrescente e prendi i top_n
+    # Sort by descending entropy and take top_n
     sorted_attrs = sorted(entropies.items(), key=lambda x: x[1], reverse=True)
     selected = [col for col, _ in sorted_attrs[:top_n]]
 
-    print(f"[Fallback] Attributo sensibile selezionato automaticamente: {selected}")
+    logger.info(f"[Fallback] Automatically selected sensitive attribute: {selected}")
     return selected
-
 
 def classify_columns(df: pd.DataFrame):
     identifiers = []
@@ -101,22 +74,22 @@ def classify_columns(df: pd.DataFrame):
     for col in df.columns:
         col_lower = col.lower().strip()
 
-        # Identificatori diretti
+        # Direct identifiers
         if any(k in col_lower for k in IDENTIFIER_KEYWORDS):
             identifiers.append(col)
             continue
 
-        # Attributi sensibili
+        # Sensitive attributes
         if any(k in col_lower for k in SENSITIVE_KEYWORDS):
             sensitive.append(col)
             continue
 
-        # QI per keyword
+        # QI by keyword
         if any(k in col_lower for k in QUASI_IDENTIFIER_KEYWORDS):
             quasi_identifiers.append(col)
             continue
 
-        # QI per struttura numerica (es. anni, età)
+        # QI by numeric structure (e.g., years, age)
         if pd.api.types.is_numeric_dtype(df[col]):
             values = df[col].dropna()
             if not values.empty:
@@ -140,14 +113,14 @@ async def anonymize(
     algorithm: str = Form(...),
     parameter: str = Form(...)
 ):
-    print("File:", file.filename) # Debugging
-    print("Tipo file ricevuto:", file.content_type) # Debugging
+    logger.info(f"File: {file.filename}")  # Debugging
+    logger.info(f"Received file type: {file.content_type}")  # Debugging
 
-    # 1. Validazione tipo file
+    # 1. File type validation
     if file.content_type not in ("text/csv", "application/json"):
-        raise HTTPException(status_code=400, detail="Formato file non valido. Solo CSV o JSON.")
+        raise HTTPException(status_code=400, detail="Invalid file format. Only CSV or JSON allowed.")
 
-    # 2. Lettura e parsing del file
+    # 2. Read and parse the file
     try:
         content = await file.read()
         if file.content_type == "text/csv":
@@ -155,50 +128,45 @@ async def anonymize(
         else:
             df = pd.read_json(BytesIO(content))
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Errore nella lettura del file: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error reading file: {str(e)}")
 
-    print("initial dataset:", df ) # Debugging
-   
-    # 3. Determina quasi-identifiers e sensitive attributes dinamicamente
+    # 3. Dynamically determine quasi-identifiers and sensitive attributes
     identifiers, quasi_ids, sensitive_attr = classify_columns(df)
-  
-    if not quasi_ids: #da valutare se aggiungere anche qui fallback
-        print("Nessun quasi-identificatore trovato nel dataset.")
-        raise HTTPException(status_code=400, detail="Nessun quasi-identificatore trovato nel dataset.")
 
-    if not sensitive_attr and (algorithm == "l-diversity" or algorithm == "t_closeness") :
-        print("Nessun attributo sensibile trovato. Attivo fallback")
+    if not quasi_ids:
+        logger.error("No quasi-identifiers found in the dataset.")
+        raise HTTPException(status_code=400, detail="No quasi-identifiers found in the dataset.")
+
+    if not sensitive_attr and (algorithm == "l-diversity" or algorithm == "t_closeness"):
+        logger.warning("No sensitive attribute found. Activating fallback.")
         sensitive_attr = fallback_sensitive_attr(df, quasi_ids)
         if not sensitive_attr:
             raise HTTPException(
                 status_code=400,
-                detail="Nessun attributo sensibile rilevato nel dataset, neanche con fallback. Impossibile procedere."
+                detail="No sensitive attribute detected in the dataset, not even with fallback. Cannot proceed."
             )
 
-    #debug
-    print("Identificatori diretti:", identifiers)
-    print("Attributi sensibili:", sensitive_attr)
-    print("Quasi-identificatori:", quasi_ids)
-    
-    #rimozione identifdicatori diretti
-    if identifiers:
-        print("Rimozione colonne identificatrici:", identifiers)
-        df.drop(columns=identifiers, inplace=True, errors='ignore')
-    
-    #Log finale delle colonne che restano nel dataset
-    print("Colonne rimanenti dopo pulizia:", list(df.columns))
+    # Debug
+    logger.info(f"Direct identifiers: {identifiers}")
+    logger.info(f"Sensitive attributes: {sensitive_attr}")
+    logger.info(f"Quasi-identifiers: {quasi_ids}")
 
-    # 4. Parsing e validazione parametro
+    # Remove direct identifiers
+    if identifiers:
+        logger.info(f"Removing identifier columns: {identifiers}")
+        df.drop(columns=identifiers, inplace=True, errors='ignore')
+
+    # 4. Parse and validate parameter
     try:
-        print(f"Parametro ricevuto: '{parameter}'")  # Debugging
+        logger.info(f"Received parameter: '{parameter}'")  # Debugging
         if algorithm in ["differential-privacy", "t-closeness"]:
             param = float(parameter)
         else:
             param = int(parameter)
     except ValueError:
-        raise HTTPException(status_code=400, detail="Parametro non valido. Deve essere un numero.")
+        raise HTTPException(status_code=400, detail="Invalid parameter. Must be a number.")
 
-    # 5. Applica l’algoritmo
+    # 5. Apply the algorithm
     result = None
     try:
         if algorithm == "k-anonymity":
@@ -206,51 +174,50 @@ async def anonymize(
         elif algorithm == "l-diversity":
             result = apply_l_diversity(df, quasi_ids, sensitive_attr, param)
         elif algorithm == "t-closeness":
-            result = apply_t_closeness(df, quasi_ids, sensitive_attr, param)        
+            result = apply_t_closeness(df, quasi_ids, sensitive_attr, param)
         elif algorithm == "differential-privacy":
             result = apply_differential_privacy(df, param)
         else:
-            raise HTTPException(status_code=400, detail="Algoritmo non supportato.")
+            raise HTTPException(status_code=400, detail="Unsupported algorithm.")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Errore durante l'applicazione dell'algoritmo: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error applying algorithm: {str(e)}")
 
-    # 6. Restituisce la preview
-    print("Dataset dopo l'applicazione dell'algoritmo:", result) # Debugging
-    result_clean = sanitize_for_json(result) #good practice to clean data before sending it back
+    # 6. Return the preview
+    result_clean = sanitize_for_json(result)
     try:
         json.dumps(result_clean.head().to_dict(orient="records"))
-        print("OK, il JSON si serializza")
+        logger.info("JSON serialization successful")
     except Exception as e:
-        print("Errore nella serializzazione JSON:", e)
+        logger.error(f"Error in JSON serialization: {e}")
     preview = result_clean.head().to_dict(orient="records")
-    
-    # 7. Salvataggio del file anonimizzato
+
+    # 7. Save the anonymized file
     file_id = str(uuid.uuid4())
     filename = f"{file_id}.csv"
 
     if USE_GCS:
         try:
-            # Salva temporaneamente in memoria
+            # Save temporarily in memory
             output_buffer = BytesIO()
             result.to_csv(output_buffer, index=False)
             output_buffer.seek(0)
 
-            # Upload su Cloud Storage
+            # Upload to Cloud Storage
             client = storage.Client()
             bucket = client.bucket(GCS_BUCKET_NAME)
             blob = bucket.blob(f"{GCS_FOLDER}/{filename}")
             blob.upload_from_file(output_buffer, content_type="text/csv")
 
-            # Ottieni credenziali e token da ADC (es. Cloud Run)
+            # Get credentials and token from ADC (e.g., Cloud Run)
             credentials, project_id = google.auth.default()
-            credentials.refresh(Request())  # Assicura che il token sia valido
+            credentials.refresh(Request())  # Ensure token is valid
 
-            # Verifica che le credenziali contengano service_account_email e token
+            # Check that credentials contain service_account_email and token
             service_account_email = getattr(credentials, "service_account_email", None)
             access_token = getattr(credentials, "token", None)
 
             if service_account_email and access_token:
-                # Genera signed URL v4 valido per 15 minuti (inline = anteprima)
+                # Generate signed URL v4 valid for 15 minutes (inline = preview)
                 expiration = datetime.timedelta(minutes=15)
                 download_url = blob.generate_signed_url(
                     version="v4",
@@ -261,12 +228,6 @@ async def anonymize(
                     access_token=access_token,
                 )
                 firestore_client = get_firestore_client()
-                logger.info(f"(2)Firestore client creato con successo per l'utente {user_data['uid']}")
-                #debug
-                credentials, project_id = google.auth.default()
-                print("Sto usando questo service account:", getattr(credentials, "service_account_email", None))
-                #----
-
                 firestore_client.collection("datasets").add({
                     "user_id": user_data["uid"],
                     "file_id": file_id,
@@ -277,51 +238,51 @@ async def anonymize(
                     "gcs_path": f"gs://{GCS_BUCKET_NAME}/{GCS_FOLDER}/{filename}"
                 })
             else:
-                raise ValueError("Credenziali non valide per la generazione del signed URL.")
+                raise ValueError("Invalid credentials for generating signed URL.")
 
-            print(f"File caricato su GCS: gs://{GCS_BUCKET_NAME}/anonymized/{filename}")
-            print(f"URL di download temporaneo: {download_url}")
+            logger.info(f"File uploaded to GCS: gs://{GCS_BUCKET_NAME}/anonymized/{filename}")
+            logger.info(f"Temporary download URL: {download_url}")
 
         except Exception as e:
-            print("Errore durante il salvataggio su GCS:", e)
-            raise HTTPException(status_code=500, detail="Errore durante il salvataggio del file su GCS.")
+            logger.error(f"Error saving to GCS: {e}")
+            raise HTTPException(status_code=500, detail="Error saving file to GCS.")
     else:
         try:
             output_path = os.path.join(OUTPUT_DIR, filename)
             result.to_csv(output_path, index=False)
             download_url = f"http://localhost:8080/download/{file_id}"
-            print(f"File anonimizzato salvato localmente in: {output_path}")
+            logger.info(f"Anonymized file saved locally at: {output_path}")
         except Exception as e:
-            print("Errore durante il salvataggio locale:", e)
-            raise HTTPException(status_code=500, detail="Errore durante il salvataggio locale.")
+            logger.error(f"Error in local saving: {e}")
+            raise HTTPException(status_code=500, detail="Error in local saving.")
 
     return {
-    "preview": preview,
-    "data": result_clean.to_dict(orient="records"),  # Manda anche il dataset completo per salvarlo dopo
-    "download_url": download_url,
-    "download_file_id": file_id  # ID del file per il download
-}
+        "preview": preview,
+        "data": result_clean.to_dict(orient="records"),  # Also send the full dataset for later saving
+        "download_url": download_url,
+        "download_file_id": file_id  # File ID for download
+    }
 
 @router.get("/download/{file_id}")
 async def download_anonymized_file(file_id: str, user_data=Depends(verify_token)):
     try:
-        # Costruisci il nome del file
+        # Build the file name
         filename = f"{file_id}.csv"
-        blob_path = os.path.join(GCS_FOLDER, filename).replace("\\", "/") #cross-platform compatibilità
+        blob_path = os.path.join(GCS_FOLDER, filename).replace("\\", "/")  # cross-platform compatibility
 
-        # Inizializza il client GCS
+        # Initialize GCS client
         client = storage.Client()
         bucket = client.bucket(GCS_BUCKET_NAME)
         blob = bucket.blob(blob_path)
 
-        # Verifica che il file esista su GCS
+        # Check that the file exists on GCS
         if not blob.exists():
-            raise HTTPException(status_code=404, detail="File non trovato su GCS.")
+            raise HTTPException(status_code=404, detail="File not found on GCS.")
 
-        # Scarica il file come bytes
+        # Download the file as bytes
         file_bytes = blob.download_as_bytes()
 
-        # Restituisci il contenuto come FileResponse (CORS-safe)
+        # Return the content as FileResponse (CORS-safe)
         return Response(
             content=file_bytes,
             media_type="text/csv",
@@ -331,5 +292,5 @@ async def download_anonymized_file(file_id: str, user_data=Depends(verify_token)
         )
 
     except Exception as e:
-        print(f"Errore durante il download del file da GCS: {e}")
-        raise HTTPException(status_code=500, detail="Errore durante il download del file.")
+        logger.error(f"Error downloading file from GCS: {e}")
+        raise HTTPException(status_code=500, detail="Error downloading file.")

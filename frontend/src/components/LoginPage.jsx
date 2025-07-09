@@ -18,8 +18,8 @@ const LoginPage = () => {
       localStorage.setItem('firebaseToken', token);
       navigate('/home');
     } catch (error) {
-      console.error('Errore durante il login con Google:', error);
-      alert('Autenticazione fallita. Riprova.');
+      console.error("Error during Google login:", error);
+      alert("Authentication failed. Please try again.");
     }
   };
 
@@ -37,7 +37,7 @@ const LoginPage = () => {
               Login to <span className="highlight">AnonimaData</span>
             </h2>
             <button onClick={handleGoogleLogin} className="button google-button">
-              Accedi con Google
+              Login with Google
             </button>
           </div>
         </WhiteBox>
@@ -50,10 +50,10 @@ export default LoginPage;
 
 
 /*
-Cosa fa questo componente:
-1- Quando clicchi sul pulsante, apre il popup di Google.
-2- Dopo il login, Firebase restituisce l’utente autenticato.
-3- Dal user, ottieni il Firebase ID Token (JWT).
-4- Puoi salvarlo in localStorage per inviarlo al backend (es. come Bearer Token).
-5- Redirect alla pagina protetta (es. /home).
+What this component does:
+1- When you click the button, it opens the Google popup.
+2- After login, Firebase returns the authenticated user.
+3- From the user, you get the Firebase ID Token (JWT).
+4- You can save it in localStorage to send to the backend (e.g., as a Bearer Token).
+5- Redirects to the protected page (e.g., /home).
 */

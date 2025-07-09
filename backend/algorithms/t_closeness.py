@@ -1,6 +1,10 @@
 import pandas as pd
 import numpy as np
+import logging
 from tools.hierarchy_builders import get_builder_for_column
+
+logger = logging.getLogger("uvicorn")
+logger.setLevel(logging.INFO)
 
 def calculate_distribution(series: pd.Series) -> pd.Series:
     dist = series.value_counts(normalize=True)
@@ -16,7 +20,7 @@ def distribution_distance(dist1: pd.Series, dist2: pd.Series) -> float:
     p = np.array([dist1.get(val, 0) for val in all_vals], dtype=float)
     q = np.array([dist2.get(val, 0) for val in all_vals], dtype=float)
 
-    # Normalizza le distribuzioni se necessario
+    # Normalize distributions if necessary
     if np.allclose(p.sum(), 0) and np.allclose(q.sum(), 0):
         return 0.0
     if not np.isclose(p.sum(), 1.0):
@@ -24,7 +28,7 @@ def distribution_distance(dist1: pd.Series, dist2: pd.Series) -> float:
     if not np.isclose(q.sum(), 1.0):
         q = q / q.sum() if q.sum() > 0 else np.ones_like(q) / len(q)
 
-    # Distanza L1 (Total Variation Distance)
+    # L1 Distance (Total Variation Distance)
     return 0.5 * np.sum(np.abs(p - q))
 
 def is_t_close(df: pd.DataFrame, quasi_ids: list, sensitive_attr: str, t: float) -> bool:
@@ -34,7 +38,7 @@ def is_t_close(df: pd.DataFrame, quasi_ids: list, sensitive_attr: str, t: float)
     for group_name, group_df in grouped:
         group_dist = calculate_distribution(group_df[sensitive_attr])
         dist = distribution_distance(global_dist, group_dist)
-        print(f"Gruppo {group_name} - distanza {dist:.4f}")
+        logger.info(f"Group {group_name} - distance {dist:.4f}")
         if dist > t:
             return False
     return True
@@ -58,7 +62,7 @@ def apply_t_closeness(df: pd.DataFrame, quasi_ids: list, sensitive_attr: str, t:
     df_copy = df.copy()
     df_copy[sensitive_attr] = df_copy[sensitive_attr].astype(str)
 
-    # Costruisci le gerarchie per i quasi-identificatori
+    # Build hierarchies for quasi-identifiers
     hierarchies = {}
     for attr in quasi_ids:
         values = df_copy[attr].dropna().astype(str).unique()
@@ -66,16 +70,16 @@ def apply_t_closeness(df: pd.DataFrame, quasi_ids: list, sensitive_attr: str, t:
         if builder:
             hierarchies[attr] = builder(values)
         else:
-            raise NotImplementedError(f"Nessun hierarchy builder disponibile per {attr}")
+            raise NotImplementedError(f"No hierarchy builder available for {attr}")
 
     for level in range(max_generalization + 1):
         levels = {qi: level for qi in quasi_ids}
         df_gen = apply_generalization(df_copy, quasi_ids, levels, hierarchies)
 
         if is_t_close(df_gen, quasi_ids, sensitive_attr, t):
-            print(f"[t-Closeness] Raggiunta con generalizzazione livello {level}")
+            logger.info(f"[t-Closeness] Achieved with generalization level {level}")
             return df_gen
 
-        print(f"\n[t-Closeness] Livello di generalizzazione {level} non sufficiente")
+        logger.info(f"[t-Closeness] Generalization level {level} not sufficient")
 
-    raise ValueError(f"Non è possibile soddisfare t-closeness con t={t} entro il livello massimo di generalizzazione {max_generalization}")
+    raise ValueError(f"Cannot satisfy t-closeness with t={t} within the maximum generalization level {max_generalization}")

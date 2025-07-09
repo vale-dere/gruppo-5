@@ -20,7 +20,7 @@ resource "google_cloud_run_service" "backend_service" {
   }
 }
 
-# Backend service account (principalmente per chiave json firebase)
+# Backend service account
 resource "google_service_account" "backend_sa" {
   account_id   = var.backend_sa_account_id
   display_name = "Cloud Run Service Account for Backend"

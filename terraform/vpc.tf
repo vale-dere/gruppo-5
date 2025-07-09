@@ -11,7 +11,7 @@ module "vpc-module" {
       subnet_ip             = "10.0.1.0/24"
       subnet_region         = var.region
       subnet_private_access = true  # permette ai VM e servizi nella subnet di accedere a servizi Google privati (senza internet)
-      subnet_flow_logs      = false # disabilitato, puoi abilitare se vuoi
+      subnet_flow_logs      = false 
     }
   ]
 }
@@ -32,7 +32,7 @@ resource "google_compute_firewall" "rules" {
   description = "Creates firewall rule targeting tagged instances"
 
   allow {
-    protocol = "all" #se funziona aumentiamo granularità
+    protocol = "all" # granularità
   }
 
   source_ranges = ["10.0.1.0/24"]

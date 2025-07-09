@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../styles/App.css';
 import backgroundImage from '../assets/banner-bg.jpg';
-import '../styles/ButtonUpload.css'; // Stili personalizzati per il bottone
+import '../styles/ButtonUpload.css'; 
 
 import WhiteBox from './WhiteBox';
 import FileUpload from './FileUpload';
@@ -15,23 +15,22 @@ function HomePage() {
  
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedAlgorithm, setSelectedAlgorithm] = useState("");
-  //Aggiuno uno stato per la preview del dataset
   const [parameterValue, setParameterValue] = useState("");
   const [previewData, setPreviewData] = useState([]);   
   const [loading, setLoading] = useState(false);
   const [downloadUrl, setDownloadUrl] = useState(null);
-  const [downloadFileId, setDownloadFileId] = useState(null); // per il download del file completo
+  const [downloadFileId, setDownloadFileId] = useState(null); 
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadMessage, setDownloadMessage] = useState("");
 
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
-        // Logout avvenuto con successo
-        navigate('/'); // Torna alla pagina di login
+        // successfully logged out
+        navigate('/'); // Redirect to login page
       })
       .catch((error) => {
-        console.error("Errore durante il logout:", error);
+        console.error("Error during logout:", error);
       });
   };
 
@@ -41,7 +40,7 @@ function HomePage() {
 
   const handleAlgorithmChange = (e) => {
     setSelectedAlgorithm(e.target.value);
-    setParameterValue("");  // reset parametro quando cambio algoritmo
+    setParameterValue("");  // reset parameter when changing algorithm
   };
 
   const handleParameterChange = (e) => {
@@ -51,20 +50,20 @@ function HomePage() {
   const handleAnonymize = async () => {
     console.log("Sending anonymization request", selectedFile, selectedAlgorithm, parameterValue); //debug purposes
 
-    // reset link download
+    // reset download link
     if (downloadUrl) {
       URL.revokeObjectURL(downloadUrl);
       setDownloadUrl(null);
     }
 
     if (!selectedFile || !selectedAlgorithm || !parameterValue.trim()) {
-      alert("Compila tutti i campi e assicurati che il parametro sia valido");
+      alert("Please fill in all fields and make sure the parameter is valid");
       return;
     }
 
     const cleanParameter = String(parameterValue).replace(',', '.');
     if (isNaN(Number(cleanParameter))) {
-      alert("Il parametro deve essere un numero valido (es. 0.1 o 3)");
+      alert("The parameter must be a valid number (e.g. 0.1 or 3)");
       return;
     }
   
@@ -73,16 +72,15 @@ function HomePage() {
     form.append("algorithm", selectedAlgorithm);  // es. "k-anonymity"
     form.append("parameter", cleanParameter);     // es. "2" o "0.5"
 
-    //********* autenticazione */
+    //********* authentication */
     try {
       const user = auth.currentUser;
       if (!user) {
-        alert("Utente non autenticato.");
+        alert("User not authenticated.");
         return;
       }
     
       const token = await getIdToken(user, true); // true for force refresh
-      console.log("User token:", token); // debug purposes
     //*********** */
 
       const BASE_URL = import.meta.env.VITE_API_BASE_URL; 
@@ -97,52 +95,50 @@ function HomePage() {
   
       console.log("Status:", res.status);
 
-      const text = await res.text(); // non usare .json() subito
-      console.log("Raw response:", text);
-
+      const text = await res.text(); // don't use .json() immediately
+     
       if (!res.ok) {
         if (res.status === 401) {
-          alert("Sessione scaduta. Esegui di nuovo il login.");
-          await signOut(auth);     // logout automatico
+          alert("Session expired. Please log in again.");
+          await signOut(auth);     // automatic logout
           navigate("/");           // redirect
           return;
       }
       const error = JSON.parse(text);
-      alert("Errore backend: " + error.detail);
+      alert("Backend error: " + error.detail);
       return;
     }
     const json = JSON.parse(text);
     setPreviewData(json.preview || []);
     setDownloadUrl(json.download_url);
-    setDownloadFileId(json.download_file_id); // <--- salva il file_id
-    console.log("(FE) Download URL:", json.download_url); // debug purposes
+    setDownloadFileId(json.download_file_id); // <--- save file_id
     } catch (err) {
-      console.error("Errore di rete:", err);
-      alert("Errore durante l’anonimizzazione. Errore di rete: " + err.message);
+      console.error("Network error:", err);
+      alert("Error during anonymization. Network error: " + err.message);
     } finally {
       setLoading(false);
     }
   };
-  
-  // Funzione per scaricare il file anonimo con autenticazione Bearer token
+
+  // Function to download the anonymized file with Bearer token authentication
   const handleDownloadFull = async () => {
     if (!downloadUrl) {
-      alert("Nessun file da scaricare. Anonimizza prima il dataset.");
+      alert("No file to download. Please anonymize the dataset first.");
       return;
     }
 
     if (!downloadFileId) {
-    alert("Nessun file da scaricare. Anonimizza prima il dataset.");
+      alert("No file to download. Please anonymize the dataset first.");
     return;
     }
     
     setIsDownloading(true);
-    setDownloadMessage("Scaricamento in corso...");
+    setDownloadMessage("Downloading...");
 
     try {
       const user = auth.currentUser;
       if (!user) {
-        alert("Utente non autenticato.");
+        alert("User not authenticated.");
         setIsDownloading(false);
         setDownloadMessage("");
         return;
@@ -150,8 +146,6 @@ function HomePage() {
       const token = await getIdToken(user, true);
 
       const BASE_URL = import.meta.env.VITE_API_BASE_URL; 
-      console.log("Base URL:", BASE_URL); // debug purposes
-      console.log("Download fileId:", downloadFileId);
       const res = await fetch(`${BASE_URL}/download/${downloadFileId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -159,7 +153,7 @@ function HomePage() {
       });
 
       if (res.status === 401) {
-      alert("Sessione scaduta. Esegui di nuovo il login.");
+      alert("Session expired. Please log in again.");
       await signOut(auth);
       navigate("/");
       return;
@@ -167,7 +161,7 @@ function HomePage() {
 
       if (!res.ok) {
         const errorText = await res.text();
-        alert("Errore nel download: " + errorText);
+        alert("Error during download: " + errorText);
         setIsDownloading(false);
         setDownloadMessage("");
         return;
@@ -186,21 +180,21 @@ function HomePage() {
       a.remove();
       window.URL.revokeObjectURL(url);
 
-      setDownloadMessage("Download completato!");
+      setDownloadMessage("Download complete!");
     } catch (err) {
-      console.error("Errore download file:", err);
-      alert("Errore durante il download: " + err.message);
+      console.error("File download error:", err);
+      alert("Error during download: " + err.message);
       setDownloadMessage("");
     } finally {
       setIsDownloading(false);
-      setTimeout(() => setDownloadMessage(""), 3000); // pulisce messaggio dopo 3 sec
+      setTimeout(() => setDownloadMessage(""), 3000); // clear message after 3 sec
     }
   };
 
   return (
     <div className="App">
       <section className="title-section">
-        {/* Banner bianco con logout*/}
+        {/* White banner with logout */}
       <header className="header-overlay">
         <button 
           type="button"
@@ -216,7 +210,7 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Contenuto principale */}
+      {/* Main content */}
       <section className="body-section">
         <WhiteBox title="Upload your dataset">
           <FileUpload selectedFile={selectedFile} onFileChange={handleFileChange} />
@@ -232,7 +226,7 @@ function HomePage() {
 
         </WhiteBox>
 
-        {/* Bottone Anonymize */}
+        {/* Button to Anonymize */}
         <div style={{ textAlign: 'center', marginTop: '20px' }}>
           <button
             type="button"
@@ -247,8 +241,8 @@ function HomePage() {
             Anonymize
           </button>
         </div>
-      
-        {/* Preview dei dati anonimizzati */}
+
+        {/* Preview of anonymized data */}
         <WhiteBox title="Preview Anonymized Data" >
           {previewData.length > 0 ? (
             <div style={{ overflowX: 'auto', backgroundColor: 'white', padding: '10px', borderRadius: '6px'}}>

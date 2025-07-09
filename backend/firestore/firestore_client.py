@@ -9,8 +9,8 @@ logger.setLevel(logging.INFO)
 def get_firestore_client():
     try:
         client = firestore.Client()
-        logger.info("Firestore client creato con successo")
+        logger.info("Firestore client created successfully")
         return client
     except Exception as e:
-        logger.error(f"Errore nella creazione del client Firestore: {e}")
+        logger.error(f"Error creating Firestore client: {e}")
         raise

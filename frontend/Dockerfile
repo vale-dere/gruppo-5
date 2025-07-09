@@ -1,4 +1,4 @@
-#è l'immagine statica che usa cloud run!
+#used by cloud run in production
 # Step 1: Build app with Vite
 FROM node:20 AS builder
 
