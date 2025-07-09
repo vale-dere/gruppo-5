@@ -1,3 +1,4 @@
+# credo sia opzionale e non raggiungibile al momento dal frontend. eliminare?
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from google.cloud import firestore

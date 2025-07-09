@@ -14,6 +14,8 @@ import datetime
 from datetime import timedelta
 from storage.storage import upload_blob
 from google.cloud import storage
+from firestore.firestore_client import get_firestore_client
+import logging
 
 from algorithms.k_anonymity import apply_k_anonymity
 from algorithms.l_diversity import apply_l_diversity
@@ -21,7 +23,11 @@ from algorithms.t_closeness import apply_t_closeness
 from algorithms.differential_privacy import apply_differential_privacy
 from config.keywords import IDENTIFIER_KEYWORDS, SENSITIVE_KEYWORDS, QUASI_IDENTIFIER_KEYWORDS
 
+logger = logging.getLogger("uvicorn")
+logger.setLevel(logging.INFO)
+
 router = APIRouter()
+
 
 USE_GCS = True  # True --> Google Cloud Storage, False ---> local
 GCS_BUCKET_NAME = "gruppo5-datasets"  # bucket GCS
@@ -31,9 +37,10 @@ GCS_FOLDER = "anonymized"
 async def protected_route(user_data=Depends(verify_token)):
     return {"message": "Accesso autorizzato!", "user_id": user_data['uid']}
 
-# Creo cartella per salvare i file
+# Creo cartella per salvare i file solo se si usa lo storage locale.
 OUTPUT_DIR = "generated_files"
-os.makedirs(OUTPUT_DIR, exist_ok=True)
+if not USE_GCS:
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 def sanitize_for_json(df):
     # Sostituisci inf con NaN
@@ -253,6 +260,22 @@ async def anonymize(
                     service_account_email=service_account_email,
                     access_token=access_token,
                 )
+                firestore_client = get_firestore_client()
+                logger.info(f"(2)Firestore client creato con successo per l'utente {user_data['uid']}")
+                #debug
+                credentials, project_id = google.auth.default()
+                print("Sto usando questo service account:", getattr(credentials, "service_account_email", None))
+                #----
+
+                firestore_client.collection("datasets").add({
+                    "user_id": user_data["uid"],
+                    "file_id": file_id,
+                    "filename": filename,
+                    "algorithm": algorithm,
+                    "param": param,
+                    "timestamp": datetime.datetime.utcnow(),
+                    "gcs_path": f"gs://{GCS_BUCKET_NAME}/{GCS_FOLDER}/{filename}"
+                })
             else:
                 raise ValueError("Credenziali non valide per la generazione del signed URL.")
 
