@@ -45,11 +45,11 @@ Modelli come **k-anonymity**, **ℓ-diversity**, **t-closeness** e **differentia
 
 La documentazione completa del progetto, con architettura, scelte di design, limitazioni e possibili estensioni future è disponibile nel PDF allegato.
 
-👉 **Inserire qui `relazione.pdf` una volta generato e buildato.**
+**Inserire qui `relazione.pdf` una volta generato e buildato.**
 
 ---
 
-## 👨‍💻 Autori
+## Autori
 
 - **Valentina de Respinis**
 - **Danila Meleleo**
