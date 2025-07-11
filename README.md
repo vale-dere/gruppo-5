@@ -54,8 +54,5 @@ La documentazione completa del progetto, con architettura, scelte di design, lim
 - **Valentina de Respinis**
 - **Danila Meleleo**
 
----
-
-## 📂 Struttura della repo (esempio)
 
 
