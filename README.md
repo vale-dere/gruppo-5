@@ -4,7 +4,7 @@
 
 **AnonimaData** è una moderna web application progettata per facilitare l’anonimizzazione di dataset tabulari secondo i principali modelli di privacy-preserving data publishing. Il progetto è stato realizzato da **Valentina de Respinis** e **Danila Meleleo** per l'esame di Scalable and Reliable Systems M a.a 2024/2025.
 
-+++ [Relazione (PDF)](./relazione.pdf) *(link attivo non appena il file viene aggiunto alla root)*
++++ [Relazione (PDF)](./AnonimaData_report.pdf)
 
 ---
 
@@ -45,7 +45,16 @@ Modelli come **k-anonymity**, **ℓ-diversity**, **t-closeness** e **differentia
 
 La documentazione completa del progetto, con architettura, scelte di design, limitazioni e possibili estensioni future è disponibile nel PDF allegato.
 
-**Inserire qui `relazione.pdf` una volta generato e buildato.**
++++ [Relazione (PDF)](./AnonimaData_report.pdf)
+
+
+---
+
+## Video demo
+
+Un video demo dimostrativo è presente al link allegato e nella repository
+
++++ [Video demo](./presentazione/VideoAnonimaData.mp4)
 
 ---
 
